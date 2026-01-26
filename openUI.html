@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SETALL CLONER MANAGER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-dark: #050505;
+            --neon-green: #00ff9d;
+            --neon-blue: #00b8ff;
+            --neon-red: #ff2a6d;
+            --gradient-main: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
+            --bg-glass: rgba(20, 20, 20, 0.8);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-dim: #8b9bb4;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 184, 255, 0.15), transparent 40%),
+                radial-gradient(circle at 100% 100%, rgba(0, 255, 157, 0.1), transparent 40%);
+            color: var(--text-main);
+            margin: 0;
+            padding: 15px;
+            min-height: 100vh;
+            padding-bottom: 50px;
+        }
+
+        body::-webkit-scrollbar { width: 4px; }
+        body::-webkit-scrollbar-track { background: #000; }
+        body::-webkit-scrollbar-thumb { background: #333; }
+
+        .container { max-width: 100%; margin: 0 auto; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-glass);
+        }
+        .title {
+            font-size: 20px;
+            font-weight: 900;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+        .stats {
+            font-size: 11px;
+            font-family: 'JetBrains Mono';
+            color: var(--text-dim);
+            text-align: right;
+        }
+        .stats span { color: var(--neon-green); font-weight: bold; }
+
+        .controls {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            padding: 15px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .control-row {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 10px;
+        }
+
+        select, input {
+            width: 100%;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-glass);
+            color: #fff;
+            padding: 12px;
+            border-radius: 8px;
+            outline: none;
+            font-family: 'JetBrains Mono';
+            font-size: 14px;
+            font-weight: bold;
+            text-align: center;
+            appearance: none;
+        }
+        
+        select {
+            text-align: left;
+            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300ff9d%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px top 50%;
+            background-size: 10px auto;
+            padding-right: 30px;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--neon-green);
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
+            background: rgba(255,255,255,0.05);
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: 0.2s;
+        }
+
+        button:active { transform: scale(0.98); }
+
+        .btn-update {
+            background: var(--gradient-main);
+            color: #000;
+            border: none;
+            font-size: 14px;
+            font-weight: 900;
+            padding: 14px;
+            box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
+        }
+        
+        .btn-action {
+            background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+        }
+        
+        .progress-wrap {
+            height: 4px; background: #222; margin-bottom: 15px; border-radius: 4px; overflow: hidden; display: none;
+        }
+        .progress-bar { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.3s; }
+        
+        #statusText {
+            font-size: 12px; color: var(--text-dim); text-align: right; margin-bottom: 10px; font-family: 'JetBrains Mono';
+        }
+
+        .search-bar {
+            background: #111; border: 1px solid #333; color: var(--neon-green);
+            margin-bottom: 20px; padding: 12px 15px; text-align: left;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
+
+        .card {
+            background: rgba(20,20,20,0.6);
+            border: 1px solid #333;
+            border-radius: 12px;
+            padding: 15px;
+            position: relative;
+        }
+        .card.installed { border-left: 3px solid var(--neon-green); }
+        .card.missing { border-left: 3px solid #555; opacity: 0.7; }
+
+        .card-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+        .card-id { font-weight: bold; color: #fff; font-size: 16px; }
+        .pkg-name { font-size: 12px; color: #888; margin-bottom: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
+        
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .btn-sm { padding: 8px; font-size: 11px; }
+        .btn-danger { color: var(--neon-red); border-color: rgba(255, 42, 109, 0.3); }
+        .btn-install { grid-column: span 2; background: rgba(0, 255, 157, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
+
+        .terminal {
+            margin-top: 30px; background: #000; padding: 15px; border-radius: 8px;
+            height: 150px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #ccc;
+            border: 1px solid #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="title">SETALL</div>
+            <div class="stats">
+                <div id="currentBranch">...</div>
+                <div>ACTIVE: <span id="activeCount">0</span></div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-update" onclick="updateAll()">
+                UPDATE CLONES
+            </button>
+            
+            <div class="control-row">
+                <input type="number" id="installQty" value="1" min="1" placeholder="#">
+                <button class="btn-action" onclick="installMore()">+ NEW CLONE</button>
+            </div>
+            
+            <div class="control-row">
+                <select id="branchList"></select>
+                <button class="btn-action" onclick="switchBranch()">SWITCH BRANCH</button>
+            </div>
+        </div>
+
+        <div id="statusText">READY</div>
+        <div class="progress-wrap" id="progressWrap">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <input type="text" class="search-bar" id="search" placeholder="🔍 Search ID / Package..." onkeyup="renderGrid()">
+
+        <div class="grid" id="cloneGrid"></div>
+
+        <div class="terminal" id="logs">System logs initialized...</div>
+    </div>
+
+    <script>
+        let cloneData = [];
+        let isWorking = false;
+
+        async function fetchStatus() {
+            try {
+                const res = await fetch('/api/status');
+                const data = await res.json();
+                
+                document.getElementById('currentBranch').innerText = data.branch;
+                document.getElementById('activeCount').innerText = data.count;
+                document.getElementById('statusText').innerText = data.status;
+                
+                const pBar = document.getElementById('progressBar');
+                const pWrap = document.getElementById('progressWrap');
+                if(data.working) {
+                    pWrap.style.display = 'block';
+                    pBar.style.width = data.progress + '%';
+                } else {
+                    pWrap.style.display = 'none';
+                }
+                isWorking = data.working;
+                toggleButtons(isWorking);
+
+                const logDiv = document.getElementById('logs');
+                logDiv.innerHTML = data.logs.map(l => `<div>> ${l}</div>`).join('');
+                logDiv.scrollTop = logDiv.scrollHeight;
+            } catch(e) {}
+        }
+
+        async function fetchClones() {
+            const res = await fetch('/api/clones');
+            cloneData = await res.json();
+            renderGrid();
+        }
+
+        async function fetchBranches() {
+            const res = await fetch('/api/branches');
+            const data = await res.json();
+            const sel = document.getElementById('branchList');
+            sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
+        }
+
+        function toggleButtons(disabled) {
+            document.querySelectorAll('button').forEach(b => b.disabled = disabled);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('cloneGrid');
+            const term = document.getElementById('search').value.toLowerCase();
+            
+            grid.innerHTML = cloneData.filter(c => 
+                c.pkg.toLowerCase().includes(term) || c.id.toString().includes(term)
+            ).map(c => `
+                <div class="card ${c.installed ? 'installed' : 'missing'}">
+                    <div class="card-header">
+                        <div class="card-id">#${c.id}</div>
+                        <div style="font-size:10px; font-weight:bold; color:${c.installed ? '#00ff9d':'#666'}">${c.installed ? 'ONLINE' : 'OFFLINE'}</div>
+                    </div>
+                    <div class="pkg-name">${c.pkg}</div>
+                    <div class="card-actions">
+                        ${c.installed ? `
+                            <button class="btn-sm" onclick="sendAction('install_one', ${c.id})">RE-INSTALL</button>
+                            <button class="btn-sm btn-danger" onclick="sendAction('uninstall_one', ${c.id})">DEL</button>
+                            <button class="btn-sm" onclick="sendAction('clear_data', ${c.id})" style="grid-column: span 2">CLEAR DATA</button>
+                        ` : `
+                            <button class="btn-sm btn-install" onclick="sendAction('install_one', ${c.id})">INSTALL NOW</button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function sendAction(type, val) {
+            if(isWorking) return;
+            if(type.includes('uninstall') && !confirm("Are you sure?")) return;
+            
+            await fetch('/api/action', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({type, value: val})
+            });
+            setTimeout(fetchClones, 1000);
+        }
+
+        function installMore() {
+            const qty = parseInt(document.getElementById('installQty').value);
+            sendAction('install_more', qty);
+        }
+
+        function switchBranch() {
+            const b = document.getElementById('branchList').value;
+            sendAction('switch', b);
+        }
+        
+        function updateAll() {
+            sendAction('update_all', 0);
+        }
+
+        fetchBranches();
+        fetchClones();
+        setInterval(fetchStatus, 1000);
+        setInterval(fetchClones, 5000);
+    </script>
+</body>
+</html>
