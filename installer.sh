@@ -18,14 +18,11 @@ mkdir -p ~/.termux/boot
 
 cat <<'EOF' > ~/.termux/boot/start_nxmc.sh
 #!/data/data/com.termux/files/usr/bin/bash
-export PATH=$PATH:/data/data/com.termux/files/usr/bin
-export TERM=xterm-256color
-
-su -c 'nohup /data/NXMC/start_nxmc.sh >/dev/null 2>&1 &'
+tsu /data/NXMC/start_nxmc.sh &'
 EOF
 
 chmod +x ~/.termux/boot/start_nxmc.sh
 
 grep -q start_nxmc.sh ~/.bashrc || cat <<'EOF' >> ~/.bashrc
-su -c 'nohup /data/NXMC/start_nxmc.sh >/dev/null 2>&1 &'
+tsu /data/NXMC/start_nxmc.sh &
 EOF
