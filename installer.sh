@@ -14,4 +14,18 @@ yes | pkg i git xdelta3 wget tsu
 wget -O ~/NXMC_INSTALLER https://github.com/NXMC-samehwid/Public/releases/download/base-release/installer
 chmod +x ~/NXMC_INSTALLER
 sudo $(realpath ~/NXMC_INSTALLER)
-mkdir -p ~/.termux/boot && echo -e '#!/data/data/com.termux/files/usr/bin/bash\nsu -c '\''export PATH=$PATH:/data/data/com.termux/files/usr/bin && export TERM=xterm-256color && /data/NXMC/start_nxmc.sh &'\''' > ~/.termux/boot/start_nxmc.sh && chmod +x ~/.termux/boot/start_nxmc.sh && grep -q start_nxmc.sh ~/.bashrc || echo "su -c 'export PATH=\$PATH:/data/data/com.termux/files/usr/bin && export TERM=xterm-256color && /data/NXMC/start_nxmc.sh &'" >> ~/.bashrc
+mkdir -p ~/.termux/boot
+
+cat <<'EOF' > ~/.termux/boot/start_nxmc.sh
+#!/data/data/com.termux/files/usr/bin/bash
+export PATH=$PATH:/data/data/com.termux/files/usr/bin
+export TERM=xterm-256color
+
+su -c 'nohup /data/NXMC/start_nxmc.sh >/dev/null 2>&1 &'
+EOF
+
+chmod +x ~/.termux/boot/start_nxmc.sh
+
+grep -q start_nxmc.sh ~/.bashrc || cat <<'EOF' >> ~/.bashrc
+su -c 'nohup /data/NXMC/start_nxmc.sh >/dev/null 2>&1 &'
+EOF
