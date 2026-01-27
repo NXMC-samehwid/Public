@@ -1,437 +1,486 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NXMC Premium Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg-body: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --bg-glass: rgba(15, 23, 42, 0.8);
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.5);
-            --success: #10b981;
-            --danger: #ef4444;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --border: rgba(148, 163, 184, 0.1);
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NXMC Cloner Manager</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            dark: '#0f172a',
+            card: '#1e293b',
+            primary: '#3b82f6',
+            success: '#10b981',
+            danger: '#ef4444',
+            warning: '#f59e0b'
+          },
+          fontFamily: {
+            mono: ['ui-monospace',
+              'SFMono-Regular',
+              'Menlo',
+              'Monaco',
+              'Consolas',
+              'monospace'],
+          }
         }
+      }
+    }
+  </script>
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
-            color: var(--text-main);
-            min-height: 100vh;
-            padding-bottom: 80px;
-        }
-
-        /* --- Header Sticky --- */
-        .navbar {
-            position: sticky; top: 0; z-index: 50;
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .meta-info { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--text-sub); display: flex; gap: 15px; }
-        .badge { padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
-        .badge.active { color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
-
-        /* --- Layout --- */
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-        
-        /* --- Dashboard Controls --- */
-        .dashboard-panel {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;
-            margin-bottom: 25px;
-        }
-
-        .panel-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 20px; position: relative; overflow: hidden;
-        }
-
-        .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 15px; font-weight: 600; }
-
-        .control-group { display: flex; gap: 10px; margin-bottom: 10px; }
-        
-        /* --- Inputs & Buttons --- */
-        input, select {
-            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
-            color: #fff; padding: 10px 12px; border-radius: 8px; font-size: 14px; width: 100%; transition: 0.2s;
-        }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-
-        button {
-            cursor: pointer; border: none; border-radius: 8px; font-weight: 600; font-size: 13px;
-            padding: 10px 16px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-        }
-        button:active { transform: translateY(1px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
-        .btn-primary:hover { background: #2563eb; }
-        
-        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
-
-        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
-
-        /* --- Progress Bar --- */
-        .progress-container {
-            height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; margin: 20px 0;
-            display: none; /* Hidden by default */
-        }
-        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--success); }
-
-        /* --- Filter Tabs --- */
-        .filter-tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .tab { 
-            padding: 6px 12px; font-size: 13px; border-radius: 20px; background: rgba(255,255,255,0.03); 
-            color: var(--text-sub); cursor: pointer; border: 1px solid transparent; white-space: nowrap;
-        }
-        .tab.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2); }
-
-        /* --- Grid & Cards --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-
-        .clone-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 16px; transition: 0.2s; position: relative;
-        }
-        .clone-card:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
-        .clone-card.status-offline { opacity: 0.6; border-style: dashed; }
-
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .clone-id { 
-            font-family: 'JetBrains Mono'; font-weight: 700; font-size: 18px; 
-            color: var(--text-main); background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px;
-        }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .online .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .offline .status-dot { background: var(--text-sub); }
-
-        .pkg-name { 
-            font-size: 12px; color: var(--text-sub); margin-bottom: 15px; 
-            word-break: break-all; font-family: 'JetBrains Mono'; line-height: 1.4;
-        }
-
-        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .full-width { grid-column: span 2; }
-
-        /* --- Terminal / Logs --- */
-        .terminal-drawer {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #050505; border-top: 1px solid #333;
-            height: 200px; transform: translateY(160px); transition: transform 0.3s;
-            z-index: 100; display: flex; flex-direction: column;
-        }
-        .terminal-drawer.open { transform: translateY(0); }
-        .terminal-header {
-            padding: 8px 15px; background: #111; border-bottom: 1px solid #333;
-            font-size: 12px; color: #888; display: flex; justify-content: space-between; cursor: pointer;
-        }
-        .terminal-content {
-            padding: 10px 15px; overflow-y: auto; flex: 1;
-            font-family: 'JetBrains Mono'; font-size: 11px; color: #ccc;
-        }
-        .log-entry { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
-        .log-entry::before { content: "> "; color: var(--success); }
-
-        /* --- Toast Notification --- */
-        .toast-container { position: fixed; top: 80px; right: 20px; z-index: 99; pointer-events: none; }
-        .toast {
-            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
-            border-left: 4px solid var(--primary); padding: 12px 20px; border-radius: 6px;
-            margin-bottom: 10px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transform: translateX(100px); opacity: 0; transition: 0.3s; pointer-events: auto;
-            display: flex; align-items: center; gap: 10px; font-size: 13px;
-        }
-        .toast.show { transform: translateX(0); opacity: 1; }
-        .toast.error { border-color: var(--danger); }
-        .toast.success { border-color: var(--success); }
-
-        @media (max-width: 600px) {
-            .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .meta-info { width: 100%; justify-content: space-between; }
-            .card-actions { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-        }
-    </style>
+  <style>
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f172a;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 3px;
+    }
+    .glass {
+      background: rgba(30, 41, 59, 0.7);
+      backdrop-filter: blur(12px);
+    }
+    .spin-slow {
+      animation: spin 3s linear infinite;
+    }
+    @keyframes spin {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
-<body>
+<body class="bg-dark text-slate-200 font-sans min-h-screen pb-20 selection:bg-primary selection:text-white">
 
-    <nav class="navbar">
-        <div class="brand">NXMC MANAGER</div>
-        <div class="meta-info">
-            <div class="badge" id="branchBadge">Branch: <span id="currentBranch">...</span></div>
-            <div class="badge active">Active: <span id="activeCount">0</span></div>
-            <div class="badge" id="statusBadge">Ready</div>
-        </div>
-    </nav>
+  <nav class="sticky top-0 z-50 glass border-b border-slate-700/50 shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4">
 
-    <div class="container">
-        
-        <div class="dashboard-panel">
-            <div class="panel-card">
-                <div class="panel-title">System Controls</div>
-                <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="updateAll()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
-                    Update All Clones
-                </button>
-                <div class="control-group">
-                    <select id="branchList"></select>
-                    <button class="btn-secondary" onclick="switchBranch()">Switch</button>
-                </div>
+        <div class="flex items-center gap-3 w-full md:w-auto justify-between">
+          <div class="flex items-center gap-2">
+            <i class='bx bxs-chip text-3xl text-primary animate-pulse'></i>
+            <div>
+              <h1 class="font-bold text-lg tracking-tight text-white leading-none">NXMC <span class="text-primary">MANAGER</span></h1>
+              <span class="text-xs text-slate-400 font-mono" id="serverStatus">Connecting...</span>
             </div>
+          </div>
+        </div>
 
-            <div class="panel-card">
-                <div class="panel-title">Clone Generator</div>
-                <div class="control-group">
-                    <input type="number" id="installQty" value="1" min="1" placeholder="Qty">
-                    <button class="btn-secondary" onclick="installMore()" style="white-space: nowrap;">+ Create New</button>
-                </div>
-                <input type="text" id="search" placeholder="Search ID or Package..." onkeyup="handleSearch()">
+        <div class="grid grid-cols-3 gap-4 w-full md:w-auto text-xs font-mono">
+          <div class="bg-slate-800/50 p-2 rounded border border-slate-700">
+            <div class="flex justify-between mb-1">
+              <span class="text-slate-400">CPU</span> <span id="cpuVal" class="text-primary font-bold">0%</span>
             </div>
+            <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+              <div id="cpuBar" class="h-full bg-primary transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="bg-slate-800/50 p-2 rounded border border-slate-700">
+            <div class="flex justify-between mb-1">
+              <span class="text-slate-400">RAM</span> <span id="ramVal" class="text-success font-bold">0%</span>
+            </div>
+            <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+              <div id="ramBar" class="h-full bg-success transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="bg-slate-800/50 p-2 rounded border border-slate-700">
+            <div class="flex justify-between mb-1">
+              <span class="text-slate-400">DISK</span> <span id="diskVal" class="text-warning font-bold">0GB</span>
+            </div>
+            <div class="h-1.5 bg-slate-700 rounded-full overflow-hidden">
+              <div id="diskBar" class="h-full bg-warning transition-all duration-500" style="width: 0%"></div>
+            </div>
+          </div>
         </div>
+      </div>
+    </div>
+    <div id="globalProgress" class="h-1 bg-primary shadow-[0_0_10px_#3b82f6] transition-all duration-300 w-0"></div>
+  </nav>
 
-        <div class="progress-container" id="progressWrap">
-            <div class="progress-fill" id="progressBar"></div>
+  <main class="max-w-7xl mx-auto px-4 py-6 space-y-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="bg-card p-4 rounded-xl border border-slate-700 shadow-sm flex flex-col justify-between">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-2">
+          Clone Generator
         </div>
-
-        <div class="filter-tabs">
-            <div class="tab active" onclick="setFilter('all', this)">All Clones</div>
-            <div class="tab" onclick="setFilter('installed', this)">Online</div>
-            <div class="tab" onclick="setFilter('missing', this)">Offline</div>
+        <div class="flex gap-2">
+          <input type="number" id="installQty" value="1" min="1" class="bg-slate-900 border border-slate-700 rounded px-3 py-2 w-20 text-center focus:border-primary focus:outline-none transition">
+          <button onclick="installMore()" class="flex-1 bg-primary hover:bg-blue-600 text-white font-medium py-2 px-4 rounded transition flex items-center justify-center gap-2">
+            <i class='bx bx-plus-circle'></i> Install
+          </button>
         </div>
-
-        <div class="grid" id="cloneGrid"></div>
+      </div>
+      <div class="bg-card p-4 rounded-xl border border-slate-700 shadow-sm flex flex-col justify-between">
+        <div class="text-xs uppercase tracking-wider text-slate-500 font-bold mb-2">
+          Clone Branch
+        </div>
+        <div class="flex gap-2">
+          <select id="branchList" class="flex-1 bg-slate-900 border border-slate-700 rounded px-3 py-2 text-sm focus:border-primary outline-none">
+            <option>Loading...</option>
+          </select>
+          <button onclick="switchBranch()" class="bg-slate-700 hover:bg-slate-600 text-white py-2 px-3 rounded transition" title="Switch Branch">
+            <i class='bx bx-git-branch'></i>
+          </button>
+        </div>
+      </div>
+      <button onclick="updateAll()" class="bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white p-4 rounded-xl border border-emerald-500/30 shadow-lg flex flex-col items-center justify-center gap-1 transition transform hover:scale-[1.02]">
+        <i class='bx bx-cloud-download text-2xl'></i>
+        <span class="font-bold">Update All Clones</span>
+      </button>
     </div>
 
-    <div class="terminal-drawer" id="terminalDrawer">
-        <div class="terminal-header" onclick="toggleTerminal()">
-            <span>SYSTEM LOGS</span>
-            <span id="logToggleIcon">▲</span>
-        </div>
-        <div class="terminal-content" id="logs">
-            <div class="log-entry">System initialized ready...</div>
-        </div>
+    <div class="flex flex-col md:flex-row gap-4 items-center justify-between bg-card/50 p-3 rounded-lg border border-slate-700/50">
+      <div class="flex bg-slate-900/80 rounded-lg p-1 border border-slate-700">
+        <button onclick="setFilter('all')" class="filter-tab px-4 py-1.5 rounded-md text-sm font-medium transition bg-primary text-white" data-tab="all">All</button>
+        <button onclick="setFilter('installed')" class="filter-tab px-4 py-1.5 rounded-md text-sm font-medium text-slate-400 hover:text-white transition" data-tab="installed">Installed</button>
+        <button onclick="setFilter('missing')" class="filter-tab px-4 py-1.5 rounded-md text-sm font-medium text-slate-400 hover:text-white transition" data-tab="missing">Missing</button>
+      </div>
+
+      <div class="relative w-full md:w-64">
+        <i class='bx bx-search absolute left-3 top-1/2 -translate-y-1/2 text-slate-500'></i>
+        <input type="text" id="searchInput" onkeyup="handleSearch()" placeholder="Search ID or Package..."
+        class="w-full bg-slate-900 border border-slate-700 rounded-lg pl-9 pr-4 py-2 text-sm focus:border-primary focus:ring-1 focus:ring-primary outline-none">
+      </div>
     </div>
 
-    <div class="toast-container" id="toastArea"></div>
+    <div id="cloneGrid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div class="col-span-full text-center py-10 text-slate-500">
+        <i class='bx bx-loader-alt bx-spin text-4xl mb-2'></i>
+        <p>
+          Loading clones...
+        </p>
+      </div>
+    </div>
 
-    <script>
-        let state = {
-            clones: [],
-            isWorking: false,
-            filter: 'all',
-            search: ''
-        };
+  </main>
 
-        async function init() {
-            await fetchBranches();
-            await fetchClones();
-            setInterval(fetchStatus, 1500);
-            setInterval(fetchClones, 5000);
-        }
+  <div id="terminal" class="fixed bottom-0 left-0 right-0 bg-slate-950 border-t border-slate-800 shadow-2xl transition-transform duration-300 transform translate-y-[calc(100%-40px)] z-40 h-64 flex flex-col">
+    <div onclick="toggleTerminal()" class="bg-slate-900 hover:bg-slate-800 cursor-pointer py-2 px-4 flex justify-between items-center border-b border-slate-800 text-xs font-mono text-slate-400 select-none">
+      <div class="flex items-center gap-2">
+        <i class='bx bx-terminal'></i> SYSTEM LOGS
+      </div>
+      <i id="termIcon" class='bx bx-chevron-up text-lg'></i>
+    </div>
+    <div id="logsContent" class="flex-1 overflow-y-auto p-4 font-mono text-xs text-slate-300 space-y-1 bg-black/50">
+    </div>
+    <div class="p-2 bg-slate-900 flex justify-end">
+      <a href="/api/logs/download" target="_blank" class="text-xs text-primary hover:underline flex items-center gap-1"><i class='bx bx-download'></i> Save Log</a>
+    </div>
+  </div>
 
-        async function fetchStatus() {
-            try {
-                const res = await fetch('/api/status');
-                if(!res.ok) throw new Error("Connection lost");
-                const data = await res.json();
-                
-                document.getElementById('currentBranch').innerText = data.branch;
-                document.getElementById('activeCount').innerText = data.count;
-                
-                const statusBadge = document.getElementById('statusBadge');
-                statusBadge.innerText = data.status;
-                statusBadge.style.color = data.working ? 'var(--primary)' : '#fff';
+  <div id="toastContainer" class="fixed top-20 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
-                const pWrap = document.getElementById('progressWrap');
-                const pBar = document.getElementById('progressBar');
-                
-                if(data.working) {
-                    pWrap.style.display = 'block';
-                    setTimeout(() => pBar.style.width = data.progress + '%', 10);
-                } else {
-                    if(state.isWorking) {
-                         pBar.style.width = '100%';
-                         setTimeout(() => { pWrap.style.display = 'none'; pBar.style.width = '0%'; }, 500);
-                    }
-                }
+  <script>
+    const state = {
+      clones: [],
+      isWorking: false,
+      filter: 'all',
+      search: '',
+      cpu: 0,
+      intervalStatus: null,
+      intervalClones: null
+    };
 
-                state.isWorking = data.working;
-                toggleControls(state.isWorking);
+    document.addEventListener('DOMContentLoaded', () => {
+      initSystem();
+    });
 
-                updateLogs(data.logs);
+    async function initSystem() {
+      await fetchBranches();
+      await fetchClones();
+      state.intervalStatus = setInterval(fetchStatus, 1500);
+      state.intervalClones = setInterval(fetchClones, 5000);
+    }
 
-            } catch(e) {
-                document.getElementById('statusBadge').innerText = "Disconnected";
-            }
-        }
-
-        async function fetchClones() {
-            try {
-                const res = await fetch('/api/clones');
-                state.clones = await res.json();
-                renderGrid();
-            } catch(e) { console.error(e); }
-        }
-
-        async function fetchBranches() {
-            try {
-                const res = await fetch('/api/branches');
-                const data = await res.json();
-                const sel = document.getElementById('branchList');
-                sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
-            } catch(e) {}
-        }
-
-        async function sendAction(type, val) {
-            if(state.isWorking) {
-                showToast("System is busy!", "error");
-                return;
-            }
-
-            if(type.includes('uninstall')) {
-                if(!confirm("Are you sure you want to delete this clone? Data will be lost.")) return;
-            }
-
-            showToast(`Action sent: ${type}`, "success");
-
-            try {
-                await fetch('/api/action', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({type, value: val})
-                });
-                setTimeout(fetchClones, 800);
-            } catch(e) {
-                showToast("Failed to send command", "error");
-            }
-        }
-
-        function installMore() {
-            const qty = parseInt(document.getElementById('installQty').value);
-            if(qty > 0) sendAction('install_more', qty);
-        }
-
-        function switchBranch() {
-            sendAction('switch', document.getElementById('branchList').value);
-        }
-        
-        function updateAll() {
-            sendAction('update_all', 0);
-        }
-
-        function renderGrid() {
-            const grid = document.getElementById('cloneGrid');
-            const searchTerm = state.search.toLowerCase();
-            
-            const filtered = state.clones.filter(c => {
-                if(state.filter === 'installed' && !c.installed) return false;
-                if(state.filter === 'missing' && c.installed) return false;
-                
-                if(searchTerm && !c.pkg.toLowerCase().includes(searchTerm) && !c.id.toString().includes(searchTerm)) return false;
-                
-                return true;
-            });
-
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-sub)">No clones found matching criteria.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filtered.map(c => `
-                <div class="clone-card ${c.installed ? 'status-online' : 'status-offline'}">
-                    <div class="card-top">
-                        <div class="clone-id">#${c.id}</div>
-                        <div class="${c.installed ? 'online' : 'offline'}">
-                             <span class="status-dot"></span>
-                        </div>
-                    </div>
-                    <div class="pkg-name" title="${c.pkg}">${c.pkg || 'Waiting for package...'}</div>
-                    
-                    <div class="card-actions">
-                        ${c.installed ? `
-                            <button class="btn-secondary" onclick="sendAction('install_one', ${c.id})">Update</button>
-                            <button class="btn-danger" onclick="sendAction('uninstall_one', ${c.id})">Del</button>
-                            <button class="btn-secondary full-width" onclick="sendAction('clear_data', ${c.id})">Clear Data</button>
-                        ` : `
-                            <button class="btn-primary full-width" onclick="sendAction('install_one', ${c.id})">Install Now</button>
-                        `}
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function toggleControls(disabled) {
-            const btns = document.querySelectorAll('button');
-            btns.forEach(b => b.disabled = disabled);
-        }
-
-        function updateLogs(newLogs) {
-            const logDiv = document.getElementById('logs');
-            const currentText = logDiv.innerHTML;
-            const newHtml = newLogs.map(l => `<div class="log-entry">${l}</div>`).join('');
-            if(logDiv.innerText.length !== newHtml.length) {
-                logDiv.innerHTML = newHtml;
-                logDiv.scrollTop = logDiv.scrollHeight;
-            }
-        }
-
-        let searchTimeout;
-        function handleSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                state.search = document.getElementById('search').value;
-                renderGrid();
-            }, 300);
-        }
-
-        function setFilter(type, el) {
-            state.filter = type;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            renderGrid();
-        }
-
-        function toggleTerminal() {
-            const drawer = document.getElementById('terminalDrawer');
-            drawer.classList.toggle('open');
-            document.getElementById('logToggleIcon').innerText = drawer.classList.contains('open') ? '▼' : '▲';
-        }
-
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toastArea');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerHTML = `<span>${type === 'success' ? '✔' : '⚠'}</span> ${msg}`;
-            container.appendChild(el);
-            
-            requestAnimationFrame(() => el.classList.add('show'));
+    async function fetchStatus() {
+      try {
+        const res = await fetch('/api/status');
+        if (!res.ok) return;
+        const data = await res.json();
+        document.getElementById('serverStatus').innerText = data.working ? "WORKING...": "READY";
+        document.getElementById('serverStatus').className = `text-xs font-mono ${data.working ? 'text-warning animate-pulse': 'text-success'}`;
+        const pBar = document.getElementById('globalProgress');
+        if (data.working) {
+          pBar.style.width = data.progress + '%';
+          pBar.classList.remove('opacity-0');
+        } else {
+          if (state.isWorking) {
+            pBar.style.width = '100%';
             setTimeout(() => {
-                el.classList.remove('show');
-                setTimeout(() => el.remove(), 300);
-            }, 3000);
+              pBar.classList.add('opacity-0'); pBar.style.width = '0%';
+            }, 500);
+          }
+        }
+        state.isWorking = data.working;
+        toggleButtons(state.isWorking);
+        updateLogs(data.logs);
+        const resStats = await fetch('/api/device_stats');
+        if (resStats.ok) {
+          const stats = await resStats.json();
+          const cpu = stats.cpu_usage ? stats.cpu_usage.toFixed(1): 0;
+          document.getElementById('cpuVal').innerText = cpu + '%';
+          document.getElementById('cpuBar').style.width = cpu + '%';
+          if (stats.ram) {
+            const total = stats.ram.MemTotal;
+            const avail = stats.ram.MemAvailable;
+            const used = total - avail;
+            const per = Math.round((used / total) * 100);
+            document.getElementById('ramVal').innerText = per + '%';
+            document.getElementById('ramBar').style.width = per + '%';
+          }
+          const dFree = stats.disk_free_gb || 0;
+          const dTotal = stats.disk_total_gb || 1;
+          const dUsedPer = Math.round(((dTotal - dFree)/dTotal)*100);
+          document.getElementById('diskVal').innerText = dFree.toFixed(1) + ' GB Free';
+          document.getElementById('diskBar').style.width = dUsedPer + '%';
         }
 
-        init();
+      } catch (e) {
+        document.getElementById('serverStatus').innerText = "DISCONNECTED";
+        document.getElementById('serverStatus').className = "text-xs font-mono text-danger";
+      }
+    }
 
-    </script>
+    async function fetchClones() {
+      if (state.isWorking) return;
+      try {
+        const res = await fetch('/api/clones');
+        const data = await res.json();
+        if (JSON.stringify(data) !== JSON.stringify(state.clones)) {
+          state.clones = data;
+          renderGrid();
+        }
+      } catch(e) {}
+    }
+
+    async function fetchBranches() {
+      try {
+        const res = await fetch('/api/branches');
+        const data = await res.json();
+        const sel = document.getElementById('branchList');
+        sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
+        const statusRes = await fetch('/api/status');
+        const statusData = await statusRes.json();
+        sel.value = statusData.branch;
+      } catch(e) {}
+    }
+    async function sendAction(type, value) {
+      if (state.isWorking) {
+        showToast("System is busy! Please wait.", "error");
+        return;
+      }
+
+      if (type === 'uninstall_one' && !confirm(`Delete ID ${value}? Data will be lost!`)) return;
+      if (type === 'clear_data' && !confirm(`Clear data for ID ${value}?`)) return;
+      if (type === 'reboot' && !confirm("Reboot device now?")) return;
+
+      showToast(`Sending command: ${type}...`, "info");
+
+      try {
+        const res = await fetch('/api/action', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            type, value
+          })
+        });
+
+        if (res.ok) showToast("Command sent successfully!", "success");
+        else showToast("Server rejected command.", "error");
+        setTimeout(fetchClones, 500);
+      } catch(e) {
+        showToast("Connection failed.", "error");
+      }
+    }
+
+    function installMore() {
+      const qty = parseInt(document.getElementById('installQty').value);
+      if (qty > 0) sendAction('install_more', qty);
+      else showToast("Invalid Quantity", "warning");
+    }
+    function updateAll() {
+      sendAction('update_all', 0);
+    }
+    function switchBranch() {
+      sendAction('switch', document.getElementById('branchList').value);
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('cloneGrid');
+      const term = state.search.toLowerCase();
+
+      const filtered = state.clones.filter(c => {
+        if (state.filter === 'installed' && !c.installed) return false;
+        if (state.filter === 'missing' && c.installed) return false;
+        if (term && !c.pkg.toLowerCase().includes(term) && !c.id.toString().includes(term)) return false;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `<div class="col-span-full py-10 text-center text-slate-500 border border-dashed border-slate-700 rounded-xl">No clones match your filter.</div>`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(c => {
+        const statusColor = c.installed ? 'border-primary/30 shadow-[0_0_15px_-5px_rgba(59,130,246,0.2)]': 'border-slate-700 border-dashed opacity-70';
+        const badge = c.installed
+        ? `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-success/20 text-success border border-success/30">INSTALLED</span>`: `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-slate-700 text-slate-400">MISSING</span>`;
+
+        return `
+        <div class="bg-card rounded-xl p-4 border ${statusColor} transition hover:border-primary/60 hover:-translate-y-1 relative group">
+
+        <div class="flex justify-between items-start mb-3">
+        <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-lg bg-slate-800 flex items-center justify-center font-mono text-lg font-bold text-white border border-slate-700">
+        ${c.id}
+        </div>
+        <div>
+        <div class="text-[10px] text-slate-400 font-mono tracking-tighter truncate w-32 md:w-40" title="${c.pkg}">${c.pkg}</div>
+        ${badge}
+        </div>
+        </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2 mt-4">
+        ${c.installed ? `
+        <button onclick="sendAction('launch_app', ${c.id})" class="bg-primary/20 hover:bg-primary/30 text-primary border border-primary/30 py-1.5 rounded text-xs font-semibold flex items-center justify-center gap-1 transition">
+        <i class='bx bx-play'></i> Launch
+        </button>
+        <button onclick="openMenu(${c.id})" class="bg-slate-700/50 hover:bg-slate-700 text-slate-300 py-1.5 rounded text-xs font-semibold border border-slate-600 transition">
+        <i class='bx bx-cog'></i> Options
+        </button>
+
+        <!-- Hidden Menu for ID ${c.id} (Simplified for HTML string) -->
+        <div id="menu-${c.id}" class="hidden absolute top-12 right-2 bg-slate-800 border border-slate-600 shadow-xl rounded-lg z-10 w-40 flex-col overflow-hidden animate-fade-in">
+        <button onclick="sendAction('force_stop', ${c.id}); closeMenu(${c.id})" class="text-left px-4 py-2 hover:bg-slate-700 text-xs text-warning"><i class='bx bx-stop-circle'></i> Force Stop</button>
+        <button onclick="sendAction('clear_data', ${c.id}); closeMenu(${c.id})" class="text-left px-4 py-2 hover:bg-slate-700 text-xs text-orange-400"><i class='bx bx-trash-alt'></i> Clear Data</button>
+        <button onclick="sendAction('freeze', ${c.id}); closeMenu(${c.id})" class="text-left px-4 py-2 hover:bg-slate-700 text-xs text-blue-300"><i class='bx bx-snowflake'></i> Freeze</button>
+        <button onclick="sendAction('unfreeze', ${c.id}); closeMenu(${c.id})" class="text-left px-4 py-2 hover:bg-slate-700 text-xs text-green-300"><i class='bx bx-sun'></i> Unfreeze</button>
+        <div class="h-px bg-slate-600 my-1"></div>
+        <button onclick="sendAction('uninstall_one', ${c.id}); closeMenu(${c.id})" class="text-left px-4 py-2 hover:bg-red-900/50 text-xs text-danger"><i class='bx bx-x'></i> Uninstall</button>
+        </div>
+
+        `: `
+        <button onclick="sendAction('install_one', ${c.id})" class="col-span-2 bg-slate-700 hover:bg-slate-600 text-white py-1.5 rounded text-xs font-semibold border border-slate-600 transition flex items-center justify-center gap-2">
+        <i class='bx bx-download'></i> Install Now
+        </button>
+        `}
+        </div>
+        <!-- Overlay to close menu -->
+        <div id="overlay-${c.id}" onclick="closeMenu(${c.id})" class="hidden fixed inset-0 z-0 cursor-default"></div>
+        </div>
+        `;
+      }).join('');
+    }
+
+    function openMenu(id) {
+      document.querySelectorAll('[id^="menu-"]').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('[id^="overlay-"]').forEach(el => el.classList.add('hidden'));
+
+      document.getElementById(`menu-${id}`).classList.remove('hidden');
+      document.getElementById(`overlay-${id}`).classList.remove('hidden');
+    }
+    function closeMenu(id) {
+      document.getElementById(`menu-${id}`).classList.add('hidden');
+      document.getElementById(`overlay-${id}`).classList.add('hidden');
+    }
+
+    function setFilter(type) {
+      state.filter = type;
+      document.querySelectorAll('.filter-tab').forEach(b => {
+        if (b.dataset.tab === type) {
+          b.classList.remove('text-slate-400', 'hover:text-white');
+          b.classList.add('bg-primary', 'text-white');
+        } else {
+          b.classList.add('text-slate-400', 'hover:text-white');
+          b.classList.remove('bg-primary', 'text-white');
+        }
+      });
+      renderGrid();
+    }
+
+    let searchTimer;
+    function handleSearch() {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(() => {
+        state.search = document.getElementById('searchInput').value;
+        renderGrid();
+      },
+        300);
+    }
+
+    function toggleButtons(disabled) {
+      const btns = document.querySelectorAll('button');
+      btns.forEach(b => {
+        if (!b.onclick) return;
+        b.disabled = disabled;
+        b.style.opacity = disabled ? 0.5: 1;
+        b.style.cursor = disabled ? 'not-allowed': 'pointer';
+      });
+    }
+
+    function toggleTerminal() {
+      const term = document.getElementById('terminal');
+      const icon = document.getElementById('termIcon');
+      if (term.classList.contains('translate-y-[calc(100%-40px)]')) {
+        term.classList.remove('translate-y-[calc(100%-40px)]');
+        icon.className = 'bx bx-chevron-down text-lg';
+      } else {
+        term.classList.add('translate-y-[calc(100%-40px)]');
+        icon.className = 'bx bx-chevron-up text-lg';
+      }
+    }
+
+    function updateLogs(logs) {
+      const container = document.getElementById('logsContent');
+      const newHTML = logs.map(l => `<div class="whitespace-nowrap"><span class="text-primary mr-2">➜</span>${l}</div>`).join('');
+      if (container.innerHTML.length !== newHTML.length) {
+        container.innerHTML = newHTML;
+        container.scrollTop = container.scrollHeight;
+      }
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+
+      let colors = 'bg-slate-800 border-slate-600 text-white';
+      let icon = 'bx-info-circle';
+
+      if (type === 'success') {
+        colors = 'bg-emerald-900/90 border-emerald-500 text-emerald-100'; icon = 'bx-check-circle';
+      }
+      if (type === 'error') {
+        colors = 'bg-red-900/90 border-red-500 text-red-100'; icon = 'bx-error';
+      }
+      if (type === 'warning') {
+        colors = 'bg-amber-900/90 border-amber-500 text-amber-100'; icon = 'bx-error-circle';
+      }
+      toast.className = `flex items-center gap-3 px-4 py-3 rounded shadow-lg border backdrop-blur-md pointer-events-auto transform transition-all duration-300 translate-x-10 opacity-0 ${colors}`;
+      toast.innerHTML = `<i class='bx ${icon} text-xl'></i> <span class="text-sm font-medium">${msg}</span>`;
+      container.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-x-10', 'opacity-0');
+      });
+
+      setTimeout(() => {
+        toast.classList.add('translate-x-10', 'opacity-0');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
