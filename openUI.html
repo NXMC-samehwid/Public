@@ -1,572 +1,443 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>NXMC Mobile</title>
-  <style>
-:root {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --border: #334155;
-    --primary: #3b82f6;
-    --text: #f1f5f9;
-    --sub: #94a3b8;
-    --danger: #ef4444;
-    --success: #10b981;
-    --warn: #f59e0b
-  }
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
-      -webkit-tap-highlight-color: transparent
-    }
-    body {
-      background-color: var(--bg);
-      color: var(--text);
-      padding-bottom: 220px;
-      font-size: 14px
-    }
-    .nav {
-      position: sticky;
-      top: 0;
-      background: rgba(15,23,42,0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid var(--border);
-      padding: 12px 16px;
-      z-index: 1000;
-      display: flex;
-      justify-content: space-between;
-      align-items: center
-    }
-    .brand {
-      font-weight: 800;
-      font-size: 18px;
-      letter-spacing: -0.5px
-    }
-    .brand span {
-      color: var(--primary)
-    }
-    .res-bar {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      padding: 10px 16px
-    }
-    .res-item {
-      background: var(--card);
-      padding: 8px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      font-size: 11px
-    }
-    .res-head {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 4px;
-      color: var(--sub)
-    }
-    .res-val {
-      font-weight: 700;
-      color: var(--text)
-    }
-    .progress {
-      height: 4px;
-      background: #334155;
-      border-radius: 2px;
-      overflow: hidden
-    }
-    .fill {
-      height: 100%;
-      width: 0%;
-      transition: width 0.3s
-    }
-    .controls {
-      padding: 0 16px;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 10px;
-      margin-bottom: 10px
-    }
-    .input-grp {
-      display: flex;
-      gap: 8px
-    }
-    input,select {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: #fff;
-      padding: 10px;
-      border-radius: 8px;
-      outline: none;
-      font-size: 14px
-    }
-    input:focus,select:focus {
-      border-color: var(--primary)
-    }
-    button {
-      border: none;
-      border-radius: 8px;
-      padding: 10px 16px;
-      font-weight: 600;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-      transition: 0.2s
-    }
-    .btn-pri {
-      background: var(--primary);
-      color: #fff
-    }
-    .btn-sec {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text)
-    }
-    .btn-all {
-      width: calc(100% - 32px);
-      margin: 0 16px 16px;
-      background: linear-gradient(45deg,#059669,#10b981);
-      color: #fff;
-      padding: 14px
-    }
-    .search-box {
-      margin: 0 16px 12px;
-      position: relative
-    }
-    .search-box input {
-      width: 100%;
-      padding-left: 36px;
-      background: var(--card)
-    }
-    .search-icon {
-      position: absolute;
-      left: 12px;
-      top: 12px;
-      width: 16px;
-      height: 16px;
-      fill: var(--sub)
-    }
-    .tabs {
-      display: flex;
-      margin: 0 16px 12px;
-      background: var(--card);
-      padding: 4px;
-      border-radius: 8px;
-      border: 1px solid var(--border)
-    }
-    .tab {
-      flex: 1;
-      text-align: center;
-      padding: 8px;
-      font-size: 12px;
-      border-radius: 6px;
-      color: var(--sub)
-    }
-    .tab.active {
-      background: var(--primary);
-      color: #fff;
-      font-weight: 600
-    }
-    .grid {
-      padding: 0 16px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px
-    }
-    .card {
-      background: var(--card);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      position: relative
-    }
-    .card.installed {
-      border-color: rgba(16,185,129,0.3)
-    }
-    .card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 8px
-    }
-    .id-badge {
-      background: #0f172a;
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-weight: 700;
-      font-size: 16px
-    }
-    .pkg {
-      font-size: 12px;
-      color: var(--sub);
-      word-break: break-all;
-      font-family: monospace;
-      line-height: 1.4
-    }
-    .status {
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-weight: 700;
-      text-transform: uppercase
-    }
-    .st-ok {
-      background: rgba(16,185,129,0.1);
-      color: var(--success)
-    }
-    .st-no {
-      background: rgba(148,163,184,0.1);
-      color: var(--sub)
-    }
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      margin-top: 12px
-    }
-    .menu-pop {
-      position: absolute;
-      bottom: 50px;
-      right: 12px;
-      background: #1e293b;
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      width: 180px;
-      z-index: 999;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-      overflow: hidden;
-      display: none;
-      flex-direction: column
-    }
-    .menu-pop.show {
-      display: flex;
-      animation: popUp 0.15s ease-out
-    }
-    .menu-item {
-      padding: 12px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      color: var(--text);
-      border-bottom: 1px solid rgba(255,255,255,0.05);
-      background: none;
-      width: 100%;
-      text-align: left
-    }
-    .menu-item:active {
-      background: rgba(255,255,255,0.1)
-    }
-    .menu-item svg {
-      width: 16px;
-      height: 16px
-    }
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 998;
-      display: none
-    }
-    .term {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: #000;
-      border-top: 1px solid var(--border);
-      height: 200px;
-      z-index: 1100;
-      transform: translateY(160px);
-      transition: transform 0.3s
-    }
-    .term.open {
-      transform: translateY(0)
-    }
-    .term-head {
-      padding: 8px 16px;
-      background: #111;
-      font-size: 11px;
-      color: #888;
-      display: flex;
-      justify-content: space-between
-    }
-    .term-body {
-      padding: 10px 16px;
-      height: 160px;
-      overflow-y: auto;
-      font-family: monospace;
-      font-size: 11px;
-      color: #ccc
-    }
-    .log-line {
-      margin-bottom: 2px;
-      white-space: nowrap
-    }
-    .toast {
-      position: fixed;
-      top: 70px;
-      right: 16px;
-      background: rgba(15,23,42,0.95);
-      border-left: 4px solid var(--primary);
-      color: #fff;
-      padding: 12px 16px;
-      border-radius: 6px;
-      font-size: 13px;
-      transform: translateX(120%);
-      transition: 0.3s;
-      z-index: 2000;
-      box-shadow: 0 5px 15px rgba(0,0,0,0.3)
-    }
-    .toast.show {
-      transform: translateX(0)
-    }
-    @keyframes popUp {
-      from {
-        opacity: 0;
-        transform: scale(0.95) translateY(10px)
-      }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NXMC Premium Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-body: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-glass: rgba(15, 23, 42, 0.8);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: rgba(148, 163, 184, 0.1);
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
 
-      to {
-        opacity: 1;
-        transform: scale(1) translateY(0)
-      }}
-  </style>
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            background-image: 
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        /* --- Header Sticky --- */
+        .navbar {
+            position: sticky; top: 0; z-index: 50;
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .meta-info { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--text-sub); display: flex; gap: 15px; }
+        .badge { padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+        .badge.active { color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
+
+        /* --- Layout --- */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
+        
+        /* --- Dashboard Controls --- */
+        .dashboard-panel {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .panel-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; position: relative; overflow: hidden;
+        }
+
+        .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 15px; font-weight: 600; }
+
+        .control-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        
+        /* --- Inputs & Buttons --- */
+        input, select {
+            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+            color: #fff; padding: 10px 12px; border-radius: 8px; font-size: 14px; width: 100%; transition: 0.2s;
+        }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+
+        button {
+            cursor: pointer; border: none; border-radius: 8px; font-weight: 600; font-size: 13px;
+            padding: 10px 16px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        }
+        button:active { transform: translateY(1px); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
+        .btn-primary:hover { background: #2563eb; }
+        
+        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+        /* New Warning Button for Force Stop */
+        .btn-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
+        .btn-warning:hover { background: rgba(245, 158, 11, 0.2); }
+
+        /* --- Progress Bar --- */
+        .progress-container {
+            height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; margin: 20px 0;
+            display: none; /* Hidden by default */
+        }
+        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--success); }
+
+        /* --- Filter Tabs --- */
+        .filter-tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { 
+            padding: 6px 12px; font-size: 13px; border-radius: 20px; background: rgba(255,255,255,0.03); 
+            color: var(--text-sub); cursor: pointer; border: 1px solid transparent; white-space: nowrap;
+        }
+        .tab.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2); }
+
+        /* --- Grid & Cards --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+
+        .clone-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 16px; transition: 0.2s; position: relative;
+        }
+        .clone-card:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
+        .clone-card.status-offline { opacity: 0.6; border-style: dashed; }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .clone-id { 
+            font-family: 'JetBrains Mono'; font-weight: 700; font-size: 18px; 
+            color: var(--text-main); background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px;
+        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .online .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .offline .status-dot { background: var(--text-sub); }
+
+        .pkg-name { 
+            font-size: 12px; color: var(--text-sub); margin-bottom: 15px; 
+            word-break: break-all; font-family: 'JetBrains Mono'; line-height: 1.4;
+        }
+
+        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .full-width { grid-column: span 2; }
+
+        /* --- Terminal / Logs --- */
+        .terminal-drawer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #050505; border-top: 1px solid #333;
+            height: 200px; transform: translateY(160px); transition: transform 0.3s;
+            z-index: 100; display: flex; flex-direction: column;
+        }
+        .terminal-drawer.open { transform: translateY(0); }
+        .terminal-header {
+            padding: 8px 15px; background: #111; border-bottom: 1px solid #333;
+            font-size: 12px; color: #888; display: flex; justify-content: space-between; cursor: pointer;
+        }
+        .terminal-content {
+            padding: 10px 15px; overflow-y: auto; flex: 1;
+            font-family: 'JetBrains Mono'; font-size: 11px; color: #ccc;
+        }
+        .log-entry { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
+        .log-entry::before { content: "> "; color: var(--success); }
+
+        /* --- Toast Notification --- */
+        .toast-container { position: fixed; top: 80px; right: 20px; z-index: 99; pointer-events: none; }
+        .toast {
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--primary); padding: 12px 20px; border-radius: 6px;
+            margin-bottom: 10px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateX(100px); opacity: 0; transition: 0.3s; pointer-events: auto;
+            display: flex; align-items: center; gap: 10px; font-size: 13px;
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.error { border-color: var(--danger); }
+        .toast.success { border-color: var(--success); }
+
+        @media (max-width: 600px) {
+            .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .meta-info { width: 100%; justify-content: space-between; }
+            .card-actions { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
 </head>
 <body>
 
-  <div class="nav">
-    <div class="brand">
-      NXMC<span>MANAGER</span>
-    </div>
-    <div id="statBox" style="font-size:10px;color:var(--sub)">
-      CONNECTING
-    </div>
-  </div>
-  <div style="height:2px;background:var(--primary);width:0%;transition:0.3s" id="globProg"></div>
+    <nav class="navbar">
+        <div class="brand">NXMC MANAGER</div>
+        <div class="meta-info">
+            <div class="badge" id="branchBadge">Branch: <span id="currentBranch">...</span></div>
+            <div class="badge active">Active: <span id="activeCount">0</span></div>
+            <div class="badge" id="statusBadge">Ready</div>
+        </div>
+    </nav>
 
-  <div class="res-bar">
-    <div class="res-item">
-      <div class="res-head">
-        <span>CPU</span><span class="res-val" id="cpuT">0%</span>
-      </div>
-      <div class="progress">
-        <div class="fill" style="background:var(--primary)" id="cpuB"></div>
-      </div>
-    </div>
-    <div class="res-item">
-      <div class="res-head">
-        <span>RAM</span><span class="res-val" id="ramT">0%</span>
-      </div>
-      <div class="progress">
-        <div class="fill" style="background:var(--success)" id="ramB"></div>
-      </div>
-    </div>
-    <div class="res-item">
-      <div class="res-head">
-        <span>DISK</span><span class="res-val" id="diskT">0G</span>
-      </div>
-      <div class="progress">
-        <div class="fill" style="background:var(--warn)" id="diskB"></div>
-      </div>
-    </div>
-  </div>
+    <div class="container">
+        
+        <div class="dashboard-panel">
+            <div class="panel-card">
+                <div class="panel-title">System Controls</div>
+                <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="updateAll()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                    Update All Clones
+                </button>
+                <div class="control-group">
+                    <select id="branchList"></select>
+                    <button class="btn-secondary" onclick="switchBranch()">Switch</button>
+                </div>
+            </div>
 
-  <div class="controls">
-    <div class="input-grp" style="flex:1">
-      <input type="number" id="qty" value="1" min="1" style="width:50px;text-align:center">
-      <button class="btn-pri" onclick="act('install_more', Q('qty').value)" style="flex:1">+ NEW</button>
+            <div class="panel-card">
+                <div class="panel-title">Clone Generator</div>
+                <div class="control-group">
+                    <input type="number" id="installQty" value="1" min="1" placeholder="Qty">
+                    <button class="btn-secondary" onclick="installMore()" style="white-space: nowrap;">+ Create New</button>
+                </div>
+                <input type="text" id="search" placeholder="Search ID or Package..." onkeyup="handleSearch()">
+            </div>
+        </div>
+
+        <div class="progress-container" id="progressWrap">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="filter-tabs">
+            <div class="tab active" onclick="setFilter('all', this)">All Clones</div>
+            <div class="tab" onclick="setFilter('installed', this)">Online</div>
+            <div class="tab" onclick="setFilter('missing', this)">Offline</div>
+        </div>
+
+        <div class="grid" id="cloneGrid"></div>
     </div>
-    <div class="input-grp">
-      <select id="brList"></select>
-      <button class="btn-sec" onclick="act('switch', Q('brList').value)">SWITCH</button>
+
+    <div class="terminal-drawer" id="terminalDrawer">
+        <div class="terminal-header" onclick="toggleTerminal()">
+            <span>SYSTEM LOGS</span>
+            <span id="logToggleIcon">▲</span>
+        </div>
+        <div class="terminal-content" id="logs">
+            <div class="log-entry">System initialized ready...</div>
+        </div>
     </div>
-  </div>
 
-  <button class="btn-all" onclick="act('update_all',0)">
-    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 12a9 9 0 00-9-9 9.75 9.75 0 00-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path><path d="M3 12a9 9 0 009 9 9.75 9.75 0 006.74-2.74L21 16"></path><path d="M16 21h5v-5"></path></svg>
-    UPDATE ALL CLONES
-  </button>
+    <div class="toast-container" id="toastArea"></div>
 
-  <div class="search-box">
-    <svg class="search-icon" viewBox="0 0 24 24"><path d="M21.71 20.29l-5.01-5.01A8.5 8.5 0 1015 3a8.5 8.5 0 001.7 12.29l5.01 5.01a1 1 0 001.42-1.42zM4 11.5a7.5 7.5 0 1115 0 7.5 7.5 0 01-15 0z" /></svg>
-    <input type="text" id="srch" placeholder="Search ID or Package..." onkeyup="render()">
-  </div>
+    <script>
+        let state = {
+            clones: [],
+            isWorking: false,
+            filter: 'all',
+            search: ''
+        };
 
-  <div class="tabs">
-    <div class="tab active" onclick="flt('all',this)">
-      ALL
-    </div>
-    <div class="tab" onclick="flt('yes',this)">
-      INSTALLED
-    </div>
-    <div class="tab" onclick="flt('no',this)">
-      MISSING
-    </div>
-  </div>
-
-  <div class="grid" id="grid"></div>
-
-  <div class="term" id="term">
-    <div class="term-head" onclick="toggleTerm()">
-      <span>SYSTEM LOGS</span>
-      <span id="termIcon">▲</span>
-    </div>
-    <div class="term-body" id="logs"></div>
-  </div>
-  <div class="toast" id="toast"></div>
-  <div class="menu-overlay" id="overlay" onclick="closeAll()"></div>
-
-  <script>
-    let S = {
-      d: [],
-      wk: false,
-      f: 'all',
-      s: '',
-      cpu: 0
-    }, Q = d=>document.getElementById(d);
-    const ICONS = {
-      play: '<path d="M5 3l14 9-14 9V3z"/>',
-      cog: '<path d="M12 15a3 3 0 100-6 3 3 0 000 6zm0-8a5 5 0 110 10 5 5 0 010-10z M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z"/>',
-      stop: '<circle cx="12" cy="12" r="10"/><rect x="9" y="9" width="6" height="6" fill="#fff"/>',
-      trash: '<path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/>',
-      ice: '<path d="M12 3v18M3 12h18M7.5 7.5l9 9M7.5 16.5l9-9"/>',
-      sun: '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>'
-    };
-    function svg(k, c = 'currentColor') {
-      return `<svg width="16" height="16" fill="${c}" stroke="${c}" stroke-width="${k === 'sun' || k === 'ice'?2: 0}" viewBox="0 0 24 24">${ICONS[k]}</svg>`
-    }
-
-    async function init() {
-      await fBr(); await fCl();
-      setInterval(fStat, 1500); setInterval(fCl, 5000);
-    }
-    async function fStat() {
-      try {
-        let r = await fetch('/api/status'),
-        d = await r.json();
-        Q('statBox').innerText = d.working?"WORKING...": "READY";
-        Q('globProg').style.width = d.working?(d.progress+"%"): (S.wk?"100%": "0%");
-        if (!d.working && S.wk) setTimeout(()=>Q('globProg').style.width = "0%", 500);
-        S.wk = d.working;
-        updLog(d.logs);
-
-        let rs = await fetch('/api/device_stats');
-        if (rs.ok) {
-          let s = await rs.json();
-          Q('cpuT').innerText = (s.cpu_usage || 0).toFixed(0)+'%';
-          Q('cpuB').style.width = (s.cpu_usage || 0)+'%';
-          if (s.ram) {
-            let p = Math.round(((s.ram.MemTotal-s.ram.MemAvailable)/s.ram.MemTotal)*100);
-            Q('ramT').innerText = p+'%'; Q('ramB').style.width = p+'%';
-          }
-          if (s.disk_total_gb) {
-            let dp = Math.round(((s.disk_total_gb-s.disk_free_gb)/s.disk_total_gb)*100);
-            Q('diskT').innerText = s.disk_free_gb.toFixed(1)+'G'; Q('diskB').style.width = dp+'%';
-          }
+        async function init() {
+            await fetchBranches();
+            await fetchClones();
+            setInterval(fetchStatus, 1500);
+            setInterval(fetchClones, 5000);
         }
-      }catch(e) {
-        Q('statBox').innerText = "OFFLINE"
-      }
-    }
-    async function fCl() {
-      if (S.wk)return;
-      try {
-        let r = await fetch('/api/clones'); S.d = await r.json(); render();
-      }catch(e) {}
-    }
-    async function fBr() {
-      try {
-        let r = await fetch('/api/branches'),
-        d = await r.json();
-        Q('brList').innerHTML = d.branches.map(b => `<option value="${b}">${b}</option>`).join('');
-        let s = await fetch('/api/status'),
-        sd = await s.json(); Q('brList').value = sd.branch;
-      }catch(e) {}
-    }
-    async function act(t, v) {
-      if (S.wk)return toast("Busy!", '#eab308');
-      if ((t.includes('uninstall') || t.includes('clear'))&&!confirm('Sure?'))return;
-      try {
-        let r = await fetch('/api/action', {
-          method: 'POST', body: JSON.stringify({
-            type: t, value: parseInt(v) || v
-          })});
-        if (r.ok) {
-          toast("Sent"); setTimeout(fCl, 500);
-        } else toast("Error", '#ef4444');
-      }catch(e) {
-        toast("Fail", '#ef4444')}
-    }
-    function render() {
-      let g = Q('grid'),
-      tr = Q('srch').value.toLowerCase(),
-      l = S.d.filter(c => {
-        if (S.f == 'yes'&&!c.installed)return 0; if (S.f == 'no' && c.installed)return 0;
-        return !tr || c.pkg.toLowerCase().includes(tr) || c.id == tr;
-      });
-      g.innerHTML = l.map(c => `
-        <div class="card ${c.installed?'installed': ''}">
-        <div class="card-head">
-        <div style="display:flex;align-items:center;gap:10px">
-        <div class="id-badge">${c.id}</div>
-        <div>
-        <div class="pkg">${c.pkg}</div>
-        <span class="status ${c.installed?'st-ok': 'st-no'}">${c.installed?'INSTALLED': 'MISSING'}</span>
-        </div>
-        </div>
-        </div>
-        <div class="actions">
-        ${c.installed ? `
-        <!-- NÚT LAUNCH ĐÃ BỊ XOÁ -->
-        <button class="btn-sec" style="grid-column: span 2" onclick="menu(${c.id})">${svg('cog')} OPTIONS</button>
-        <div id="m-${c.id}" class="menu-pop">
-        <button class="menu-item" style="color:#fcd34d" onclick="ac(${c.id},'force_stop')">${svg('stop', '#fcd34d')} Force Stop</button>
-        <button class="menu-item" style="color:#fb923c" onclick="ac(${c.id},'clear_data')">${svg('trash', '#fb923c')} Clear Data</button>
-        <button class="menu-item" style="color:#93c5fd" onclick="ac(${c.id},'freeze')">${svg('ice', '#93c5fd')} Freeze</button>
-        <button class="menu-item" style="color:#86efac" onclick="ac(${c.id},'unfreeze')">${svg('sun', '#86efac')} Unfreeze</button>
-        <div style="height:1px;background:#334155;margin:4px 0"></div>
-        <button class="menu-item" style="color:#fca5a5" onclick="ac(${c.id},'uninstall_one')">${svg('trash', '#fca5a5')} Uninstall</button>
-        </div>
-        `: `
-        <button class="btn-sec" style="grid-column:span 2;background:#334155" onclick="act('install_one',${c.id})">⬇ Install Now</button>
-        `}
-        </div>
-        </div>`).join('') || '<div style="text-align:center;color:#64748b;padding:20px">NO DATA</div>';
-    }
-    function menu(id) {
-      closeAll(); Q('m-'+id).classList.add('show'); Q('overlay').style.display = 'block';
-    }
-    function closeAll() {
-      document.querySelectorAll('.menu-pop').forEach(e => e.classList.remove('show')); Q('overlay').style.display = 'none';
-    }
-    function ac(id, t) {
-      closeAll(); act(t,
-        id);
-    }
-    function flt(k, e) {
-      S.f = k; document.querySelectorAll('.tab').forEach(t => t.classList.remove('active')); e.classList.add('active'); render();
-    }
-    function updLog(l) {
-      let b = Q('logs'), h = l.map(x => `<div class="log-line"><span style="color:var(--primary)">➜</span> ${x}</div>`).join(''); if (b.innerHTML.length != h.length)b.innerHTML = h,
-      b.scrollTop = b.scrollHeight;
-    }
-    function toggleTerm() {
-      let t = Q('term'); t.classList.toggle('open'); Q('termIcon').innerText = t.classList.contains('open')?'▼': '▲';
-    }
-    function toast(m, c = 'var(--primary)') {
-      let t = Q('toast'); t.innerText = m; t.style.borderLeftColor = c;
-      t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 2000);
-    }
-    init();
-  </script>
+
+        async function fetchStatus() {
+            try {
+                const res = await fetch('/api/status');
+                if(!res.ok) throw new Error("Connection lost");
+                const data = await res.json();
+                
+                document.getElementById('currentBranch').innerText = data.branch;
+                document.getElementById('activeCount').innerText = data.count;
+                
+                const statusBadge = document.getElementById('statusBadge');
+                statusBadge.innerText = data.status;
+                statusBadge.style.color = data.working ? 'var(--primary)' : '#fff';
+
+                const pWrap = document.getElementById('progressWrap');
+                const pBar = document.getElementById('progressBar');
+                
+                if(data.working) {
+                    pWrap.style.display = 'block';
+                    setTimeout(() => pBar.style.width = data.progress + '%', 10);
+                } else {
+                    if(state.isWorking) {
+                         pBar.style.width = '100%';
+                         setTimeout(() => { pWrap.style.display = 'none'; pBar.style.width = '0%'; }, 500);
+                    }
+                }
+
+                state.isWorking = data.working;
+                toggleControls(state.isWorking);
+
+                updateLogs(data.logs);
+
+            } catch(e) {
+                document.getElementById('statusBadge').innerText = "Disconnected";
+            }
+        }
+
+        async function fetchClones() {
+            try {
+                const res = await fetch('/api/clones');
+                state.clones = await res.json();
+                renderGrid();
+            } catch(e) { console.error(e); }
+        }
+
+        async function fetchBranches() {
+            try {
+                const res = await fetch('/api/branches');
+                const data = await res.json();
+                const sel = document.getElementById('branchList');
+                sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
+            } catch(e) {}
+        }
+
+        async function sendAction(type, val) {
+            if(state.isWorking) {
+                showToast("System is busy!", "error");
+                return;
+            }
+
+            if(type.includes('uninstall')) {
+                if(!confirm("Are you sure you want to delete this clone? Data will be lost.")) return;
+            }
+
+            showToast(`Action sent: ${type}`, "success");
+
+            try {
+                await fetch('/api/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type, value: val})
+                });
+                setTimeout(fetchClones, 800);
+            } catch(e) {
+                showToast("Failed to send command", "error");
+            }
+        }
+
+        function installMore() {
+            const qty = parseInt(document.getElementById('installQty').value);
+            if(qty > 0) sendAction('install_more', qty);
+        }
+
+        function switchBranch() {
+            sendAction('switch', document.getElementById('branchList').value);
+        }
+        
+        function updateAll() {
+            sendAction('update_all', 0);
+        }
+
+        function renderGrid() {
+            const grid = document.getElementById('cloneGrid');
+            const searchTerm = state.search.toLowerCase();
+            
+            const filtered = state.clones.filter(c => {
+                if(state.filter === 'installed' && !c.installed) return false;
+                if(state.filter === 'missing' && c.installed) return false;
+                
+                if(searchTerm && !c.pkg.toLowerCase().includes(searchTerm) && !c.id.toString().includes(searchTerm)) return false;
+                
+                return true;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-sub)">No clones found matching criteria.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(c => `
+                <div class="clone-card ${c.installed ? 'status-online' : 'status-offline'}">
+                    <div class="card-top">
+                        <div class="clone-id">#${c.id}</div>
+                        <div class="${c.installed ? 'online' : 'offline'}">
+                             <span class="status-dot"></span>
+                        </div>
+                    </div>
+                    <div class="pkg-name" title="${c.pkg}">${c.pkg || 'Waiting for package...'}</div>
+                    
+                    <div class="card-actions">
+                        ${c.installed ? `
+                            <button class="btn-secondary" onclick="sendAction('install_one', ${c.id})">Update</button>
+                            <button class="btn-danger" onclick="sendAction('uninstall_one', ${c.id})">Del</button>
+                            <button class="btn-warning" onclick="sendAction('force_stop', ${c.id})">Stop</button>
+                            <button class="btn-secondary" onclick="sendAction('clear_data', ${c.id})">Clear</button>
+                        ` : `
+                            <button class="btn-primary full-width" onclick="sendAction('install_one', ${c.id})">Install Now</button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleControls(disabled) {
+            const btns = document.querySelectorAll('button');
+            btns.forEach(b => b.disabled = disabled);
+        }
+
+        function updateLogs(newLogs) {
+            const logDiv = document.getElementById('logs');
+            const currentText = logDiv.innerHTML;
+            const newHtml = newLogs.map(l => `<div class="log-entry">${l}</div>`).join('');
+            if(logDiv.innerText.length !== newHtml.length) {
+                logDiv.innerHTML = newHtml;
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+        }
+
+        let searchTimeout;
+        function handleSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                state.search = document.getElementById('search').value;
+                renderGrid();
+            }, 300);
+        }
+
+        function setFilter(type, el) {
+            state.filter = type;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderGrid();
+        }
+
+        function toggleTerminal() {
+            const drawer = document.getElementById('terminalDrawer');
+            drawer.classList.toggle('open');
+            document.getElementById('logToggleIcon').innerText = drawer.classList.contains('open') ? '▼' : '▲';
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastArea');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<span>${type === 'success' ? '✔' : '⚠'}</span> ${msg}`;
+            container.appendChild(el);
+            
+            requestAnimationFrame(() => el.classList.add('show'));
+            setTimeout(() => {
+                el.classList.remove('show');
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
+
+        init();
+
+    </script>
 </body>
 </html>
