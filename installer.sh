@@ -13,16 +13,19 @@ yes | pkg i git xdelta3 wget tsu
 
 wget -O ~/NXMC_INSTALLER https://github.com/NXMC-samehwid/Public/releases/download/base-release/installer
 chmod +x ~/NXMC_INSTALLER
+su 0 /system/bin/sh -c "setenforce 0"
 sudo $(realpath ~/NXMC_INSTALLER)
 mkdir -p ~/.termux/boot
 
 cat <<'EOF' > ~/.termux/boot/start_nxmc.sh
 #!/data/data/com.termux/files/usr/bin/bash
-tsu /data/NXMC/start_nxmc.sh > /dev/null &
+su 0 /system/bin/sh -c "'setenforce 0'"
+tsu /data/NXMC/start_nxmc.sh > /dev/null
 EOF
 
 chmod +x ~/.termux/boot/start_nxmc.sh
 
 grep -q start_nxmc.sh ~/.bashrc || cat <<'EOF' >> ~/.bashrc
+su 0 /system/bin/sh -c "'setenforce 0'"
 tsu /data/NXMC/start_nxmc.sh > /dev/null &
 EOF
