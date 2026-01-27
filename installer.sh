@@ -14,3 +14,4 @@ yes | pkg i git xdelta3 wget tsu
 wget -O ~/NXMC_INSTALLER https://github.com/NXMC-samehwid/Public/releases/download/base-release/installer
 chmod +x ~/NXMC_INSTALLER
 sudo $(realpath ~/NXMC_INSTALLER)
+sudo /data/NXMC/start_nxmc.sh
