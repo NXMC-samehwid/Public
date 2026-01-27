@@ -9,8 +9,8 @@ yes | pkg update
 yes | pkg upgrade
 yes | pkg i python
 yes | pkg i python-pip
-yes | pkg i git xdelta3 wget
+yes | pkg i git xdelta3 wget tsu
 
 wget -O ~/NXMC_INSTALLER https://github.com/NXMC-samehwid/Public/releases/download/base-release/installer
 chmod +x ~/NXMC_INSTALLER
-$(realpath ~/NXMC_INSTALLER)
+sudo $(realpath ~/NXMC_INSTALLER)
