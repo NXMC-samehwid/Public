@@ -19,13 +19,11 @@ mkdir -p ~/.termux/boot
 
 cat <<'EOF' > ~/.termux/boot/start_nxmc.sh
 #!/data/data/com.termux/files/usr/bin/bash
-su 0 /system/bin/sh -c "'setenforce 0'"
 tsu /data/NXMC/start_nxmc.sh > /dev/null 2>&1 & disown
 EOF
 
 chmod +x ~/.termux/boot/start_nxmc.sh
 
 grep -q start_nxmc.sh ~/.bashrc || cat <<'EOF' >> ~/.bashrc
-su 0 /system/bin/sh -c "'setenforce 0'"
 tsu /data/NXMC/start_nxmc.sh > /dev/null 2>&1 & disown
 EOF
