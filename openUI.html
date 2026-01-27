@@ -526,8 +526,8 @@
         </div>
         <div class="actions">
         ${c.installed ? `
-        <button class="btn-pri" onclick="act('launch_app',${c.id})">${svg('play', '#fff')} Launch</button>
-        <button class="btn-sec" onclick="menu(${c.id})">${svg('cog')} Opt</button>
+        <!-- NÚT LAUNCH ĐÃ BỊ XOÁ -->
+        <button class="btn-sec" style="grid-column: span 2" onclick="menu(${c.id})">${svg('cog')} OPTIONS</button>
         <div id="m-${c.id}" class="menu-pop">
         <button class="menu-item" style="color:#fcd34d" onclick="ac(${c.id},'force_stop')">${svg('stop', '#fcd34d')} Force Stop</button>
         <button class="menu-item" style="color:#fb923c" onclick="ac(${c.id},'clear_data')">${svg('trash', '#fb923c')} Clear Data</button>
