@@ -1,340 +1,437 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SETALL CLONER MANAGER</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>NXMC Premium Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --bg-dark: #050505;
-            --neon-green: #00ff9d;
-            --neon-blue: #00b8ff;
-            --neon-red: #ff2a6d;
-            --gradient-main: linear-gradient(90deg, var(--neon-green), var(--neon-blue));
-            --bg-glass: rgba(20, 20, 20, 0.8);
-            --border-glass: rgba(255, 255, 255, 0.1);
-            --text-main: #ffffff;
-            --text-dim: #8b9bb4;
+            --bg-body: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-glass: rgba(15, 23, 42, 0.8);
+            --primary: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.5);
+            --success: #10b981;
+            --danger: #ef4444;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --border: rgba(148, 163, 184, 0.1);
+            --radius: 12px;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: var(--bg-body);
             background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 184, 255, 0.15), transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(0, 255, 157, 0.1), transparent 40%);
+                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
+                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
             color: var(--text-main);
-            margin: 0;
-            padding: 15px;
             min-height: 100vh;
-            padding-bottom: 50px;
+            padding-bottom: 80px;
         }
 
-        body::-webkit-scrollbar { width: 4px; }
-        body::-webkit-scrollbar-track { background: #000; }
-        body::-webkit-scrollbar-thumb { background: #333; }
-
-        .container { max-width: 100%; margin: 0 auto; }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--border-glass);
-        }
-        .title {
-            font-size: 20px;
-            font-weight: 900;
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -0.5px;
-        }
-        .stats {
-            font-size: 11px;
-            font-family: 'JetBrains Mono';
-            color: var(--text-dim);
-            text-align: right;
-        }
-        .stats span { color: var(--neon-green); font-weight: bold; }
-
-        .controls {
+        /* --- Header Sticky --- */
+        .navbar {
+            position: sticky; top: 0; z-index: 50;
             background: var(--bg-glass);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--border-glass);
-            padding: 15px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
+        .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .meta-info { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--text-sub); display: flex; gap: 15px; }
+        .badge { padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+        .badge.active { color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
 
-        .control-row {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 10px;
-        }
-
-        select, input {
-            width: 100%;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--border-glass);
-            color: #fff;
-            padding: 12px;
-            border-radius: 8px;
-            outline: none;
-            font-family: 'JetBrains Mono';
-            font-size: 14px;
-            font-weight: bold;
-            text-align: center;
-            appearance: none;
-        }
+        /* --- Layout --- */
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
         
-        select {
-            text-align: left;
-            background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2300ff9d%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E");
-            background-repeat: no-repeat;
-            background-position: right 10px top 50%;
-            background-size: 10px auto;
-            padding-right: 30px;
+        /* --- Dashboard Controls --- */
+        .dashboard-panel {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;
+            margin-bottom: 25px;
         }
 
-        input:focus, select:focus {
-            border-color: var(--neon-green);
-            box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+        .panel-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; position: relative; overflow: hidden;
         }
+
+        .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 15px; font-weight: 600; }
+
+        .control-group { display: flex; gap: 10px; margin-bottom: 10px; }
+        
+        /* --- Inputs & Buttons --- */
+        input, select {
+            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
+            color: #fff; padding: 10px 12px; border-radius: 8px; font-size: 14px; width: 100%; transition: 0.2s;
+        }
+        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
 
         button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-glass);
-            background: rgba(255,255,255,0.05);
-            color: #fff;
-            font-weight: 700;
-            font-size: 13px;
-            text-transform: uppercase;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: 0.2s;
+            cursor: pointer; border: none; border-radius: 8px; font-weight: 600; font-size: 13px;
+            padding: 10px 16px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
         }
+        button:active { transform: translateY(1px); }
+        button:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
-        button:active { transform: scale(0.98); }
-
-        .btn-update {
-            background: var(--gradient-main);
-            color: #000;
-            border: none;
-            font-size: 14px;
-            font-weight: 900;
-            padding: 14px;
-            box-shadow: 0 0 15px rgba(0, 255, 157, 0.3);
-        }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
+        .btn-primary:hover { background: #2563eb; }
         
-        .btn-action {
-            background: linear-gradient(180deg, #2a2a2a, #1a1a1a);
+        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border); }
+        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
+        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+
+        /* --- Progress Bar --- */
+        .progress-container {
+            height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; margin: 20px 0;
+            display: none; /* Hidden by default */
         }
-        
-        .progress-wrap {
-            height: 4px; background: #222; margin-bottom: 15px; border-radius: 4px; overflow: hidden; display: none;
+        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--success); }
+
+        /* --- Filter Tabs --- */
+        .filter-tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .tab { 
+            padding: 6px 12px; font-size: 13px; border-radius: 20px; background: rgba(255,255,255,0.03); 
+            color: var(--text-sub); cursor: pointer; border: 1px solid transparent; white-space: nowrap;
         }
-        .progress-bar { height: 100%; background: var(--neon-green); width: 0%; transition: width 0.3s; }
-        
-        #statusText {
-            font-size: 12px; color: var(--text-dim); text-align: right; margin-bottom: 10px; font-family: 'JetBrains Mono';
+        .tab.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2); }
+
+        /* --- Grid & Cards --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
+
+        .clone-card {
+            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 16px; transition: 0.2s; position: relative;
+        }
+        .clone-card:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
+        .clone-card.status-offline { opacity: 0.6; border-style: dashed; }
+
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .clone-id { 
+            font-family: 'JetBrains Mono'; font-weight: 700; font-size: 18px; 
+            color: var(--text-main); background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px;
+        }
+        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+        .online .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
+        .offline .status-dot { background: var(--text-sub); }
+
+        .pkg-name { 
+            font-size: 12px; color: var(--text-sub); margin-bottom: 15px; 
+            word-break: break-all; font-family: 'JetBrains Mono'; line-height: 1.4;
         }
 
-        .search-bar {
-            background: #111; border: 1px solid #333; color: var(--neon-green);
-            margin-bottom: 20px; padding: 12px 15px; text-align: left;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 15px;
-        }
-
-        @media (min-width: 600px) { .grid { grid-template-columns: 1fr 1fr; } }
-
-        .card {
-            background: rgba(20,20,20,0.6);
-            border: 1px solid #333;
-            border-radius: 12px;
-            padding: 15px;
-            position: relative;
-        }
-        .card.installed { border-left: 3px solid var(--neon-green); }
-        .card.missing { border-left: 3px solid #555; opacity: 0.7; }
-
-        .card-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-        .card-id { font-weight: bold; color: #fff; font-size: 16px; }
-        .pkg-name { font-size: 12px; color: #888; margin-bottom: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
-        
         .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-sm { padding: 8px; font-size: 11px; }
-        .btn-danger { color: var(--neon-red); border-color: rgba(255, 42, 109, 0.3); }
-        .btn-install { grid-column: span 2; background: rgba(0, 255, 157, 0.15); color: var(--neon-green); border: 1px solid var(--neon-green); }
+        .full-width { grid-column: span 2; }
 
-        .terminal {
-            margin-top: 30px; background: #000; padding: 15px; border-radius: 8px;
-            height: 150px; overflow-y: auto; font-family: monospace; font-size: 11px; color: #ccc;
-            border: 1px solid #333;
+        /* --- Terminal / Logs --- */
+        .terminal-drawer {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: #050505; border-top: 1px solid #333;
+            height: 200px; transform: translateY(160px); transition: transform 0.3s;
+            z-index: 100; display: flex; flex-direction: column;
+        }
+        .terminal-drawer.open { transform: translateY(0); }
+        .terminal-header {
+            padding: 8px 15px; background: #111; border-bottom: 1px solid #333;
+            font-size: 12px; color: #888; display: flex; justify-content: space-between; cursor: pointer;
+        }
+        .terminal-content {
+            padding: 10px 15px; overflow-y: auto; flex: 1;
+            font-family: 'JetBrains Mono'; font-size: 11px; color: #ccc;
+        }
+        .log-entry { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
+        .log-entry::before { content: "> "; color: var(--success); }
+
+        /* --- Toast Notification --- */
+        .toast-container { position: fixed; top: 80px; right: 20px; z-index: 99; pointer-events: none; }
+        .toast {
+            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
+            border-left: 4px solid var(--primary); padding: 12px 20px; border-radius: 6px;
+            margin-bottom: 10px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transform: translateX(100px); opacity: 0; transition: 0.3s; pointer-events: auto;
+            display: flex; align-items: center; gap: 10px; font-size: 13px;
+        }
+        .toast.show { transform: translateX(0); opacity: 1; }
+        .toast.error { border-color: var(--danger); }
+        .toast.success { border-color: var(--success); }
+
+        @media (max-width: 600px) {
+            .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .meta-info { width: 100%; justify-content: space-between; }
+            .card-actions { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
         }
     </style>
 </head>
 <body>
+
+    <nav class="navbar">
+        <div class="brand">NXMC MANAGER</div>
+        <div class="meta-info">
+            <div class="badge" id="branchBadge">Branch: <span id="currentBranch">...</span></div>
+            <div class="badge active">Active: <span id="activeCount">0</span></div>
+            <div class="badge" id="statusBadge">Ready</div>
+        </div>
+    </nav>
+
     <div class="container">
-        <div class="header">
-            <div class="title">SETALL</div>
-            <div class="stats">
-                <div id="currentBranch">...</div>
-                <div>ACTIVE: <span id="activeCount">0</span></div>
+        
+        <div class="dashboard-panel">
+            <div class="panel-card">
+                <div class="panel-title">System Controls</div>
+                <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="updateAll()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
+                    Update All Clones
+                </button>
+                <div class="control-group">
+                    <select id="branchList"></select>
+                    <button class="btn-secondary" onclick="switchBranch()">Switch</button>
+                </div>
+            </div>
+
+            <div class="panel-card">
+                <div class="panel-title">Clone Generator</div>
+                <div class="control-group">
+                    <input type="number" id="installQty" value="1" min="1" placeholder="Qty">
+                    <button class="btn-secondary" onclick="installMore()" style="white-space: nowrap;">+ Create New</button>
+                </div>
+                <input type="text" id="search" placeholder="Search ID or Package..." onkeyup="handleSearch()">
             </div>
         </div>
 
-        <div class="controls">
-            <button class="btn-update" onclick="updateAll()">
-                UPDATE CLONES
-            </button>
-            
-            <div class="control-row">
-                <input type="number" id="installQty" value="1" min="1" placeholder="#">
-                <button class="btn-action" onclick="installMore()">+ NEW CLONE</button>
-            </div>
-            
-            <div class="control-row">
-                <select id="branchList"></select>
-                <button class="btn-action" onclick="switchBranch()">SWITCH BRANCH</button>
-            </div>
+        <div class="progress-container" id="progressWrap">
+            <div class="progress-fill" id="progressBar"></div>
         </div>
 
-        <div id="statusText">READY</div>
-        <div class="progress-wrap" id="progressWrap">
-            <div class="progress-bar" id="progressBar"></div>
+        <div class="filter-tabs">
+            <div class="tab active" onclick="setFilter('all', this)">All Clones</div>
+            <div class="tab" onclick="setFilter('installed', this)">Online</div>
+            <div class="tab" onclick="setFilter('missing', this)">Offline</div>
         </div>
-
-        <input type="text" class="search-bar" id="search" placeholder="🔍 Search ID / Package..." onkeyup="renderGrid()">
 
         <div class="grid" id="cloneGrid"></div>
-
-        <div class="terminal" id="logs">System logs initialized...</div>
     </div>
 
+    <div class="terminal-drawer" id="terminalDrawer">
+        <div class="terminal-header" onclick="toggleTerminal()">
+            <span>SYSTEM LOGS</span>
+            <span id="logToggleIcon">▲</span>
+        </div>
+        <div class="terminal-content" id="logs">
+            <div class="log-entry">System initialized ready...</div>
+        </div>
+    </div>
+
+    <div class="toast-container" id="toastArea"></div>
+
     <script>
-        let cloneData = [];
-        let isWorking = false;
+        let state = {
+            clones: [],
+            isWorking: false,
+            filter: 'all',
+            search: ''
+        };
+
+        async function init() {
+            await fetchBranches();
+            await fetchClones();
+            setInterval(fetchStatus, 1500);
+            setInterval(fetchClones, 5000);
+        }
 
         async function fetchStatus() {
             try {
                 const res = await fetch('/api/status');
+                if(!res.ok) throw new Error("Connection lost");
                 const data = await res.json();
                 
                 document.getElementById('currentBranch').innerText = data.branch;
                 document.getElementById('activeCount').innerText = data.count;
-                document.getElementById('statusText').innerText = data.status;
                 
-                const pBar = document.getElementById('progressBar');
+                const statusBadge = document.getElementById('statusBadge');
+                statusBadge.innerText = data.status;
+                statusBadge.style.color = data.working ? 'var(--primary)' : '#fff';
+
                 const pWrap = document.getElementById('progressWrap');
+                const pBar = document.getElementById('progressBar');
+                
                 if(data.working) {
                     pWrap.style.display = 'block';
-                    pBar.style.width = data.progress + '%';
+                    setTimeout(() => pBar.style.width = data.progress + '%', 10);
                 } else {
-                    pWrap.style.display = 'none';
+                    if(state.isWorking) {
+                         pBar.style.width = '100%';
+                         setTimeout(() => { pWrap.style.display = 'none'; pBar.style.width = '0%'; }, 500);
+                    }
                 }
-                isWorking = data.working;
-                toggleButtons(isWorking);
 
-                const logDiv = document.getElementById('logs');
-                logDiv.innerHTML = data.logs.map(l => `<div>> ${l}</div>`).join('');
-                logDiv.scrollTop = logDiv.scrollHeight;
-            } catch(e) {}
+                state.isWorking = data.working;
+                toggleControls(state.isWorking);
+
+                updateLogs(data.logs);
+
+            } catch(e) {
+                document.getElementById('statusBadge').innerText = "Disconnected";
+            }
         }
 
         async function fetchClones() {
-            const res = await fetch('/api/clones');
-            cloneData = await res.json();
-            renderGrid();
+            try {
+                const res = await fetch('/api/clones');
+                state.clones = await res.json();
+                renderGrid();
+            } catch(e) { console.error(e); }
         }
 
         async function fetchBranches() {
-            const res = await fetch('/api/branches');
-            const data = await res.json();
-            const sel = document.getElementById('branchList');
-            sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
-        }
-
-        function toggleButtons(disabled) {
-            document.querySelectorAll('button').forEach(b => b.disabled = disabled);
-        }
-
-        function renderGrid() {
-            const grid = document.getElementById('cloneGrid');
-            const term = document.getElementById('search').value.toLowerCase();
-            
-            grid.innerHTML = cloneData.filter(c => 
-                c.pkg.toLowerCase().includes(term) || c.id.toString().includes(term)
-            ).map(c => `
-                <div class="card ${c.installed ? 'installed' : 'missing'}">
-                    <div class="card-header">
-                        <div class="card-id">#${c.id}</div>
-                        <div style="font-size:10px; font-weight:bold; color:${c.installed ? '#00ff9d':'#666'}">${c.installed ? 'ONLINE' : 'OFFLINE'}</div>
-                    </div>
-                    <div class="pkg-name">${c.pkg}</div>
-                    <div class="card-actions">
-                        ${c.installed ? `
-                            <button class="btn-sm" onclick="sendAction('install_one', ${c.id})">RE-INSTALL</button>
-                            <button class="btn-sm btn-danger" onclick="sendAction('uninstall_one', ${c.id})">DEL</button>
-                            <button class="btn-sm" onclick="sendAction('clear_data', ${c.id})" style="grid-column: span 2">CLEAR DATA</button>
-                        ` : `
-                            <button class="btn-sm btn-install" onclick="sendAction('install_one', ${c.id})">INSTALL NOW</button>
-                        `}
-                    </div>
-                </div>
-            `).join('');
+            try {
+                const res = await fetch('/api/branches');
+                const data = await res.json();
+                const sel = document.getElementById('branchList');
+                sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
+            } catch(e) {}
         }
 
         async function sendAction(type, val) {
-            if(isWorking) return;
-            if(type.includes('uninstall') && !confirm("Are you sure?")) return;
-            
-            await fetch('/api/action', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({type, value: val})
-            });
-            setTimeout(fetchClones, 1000);
+            if(state.isWorking) {
+                showToast("System is busy!", "error");
+                return;
+            }
+
+            if(type.includes('uninstall')) {
+                if(!confirm("Are you sure you want to delete this clone? Data will be lost.")) return;
+            }
+
+            showToast(`Action sent: ${type}`, "success");
+
+            try {
+                await fetch('/api/action', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({type, value: val})
+                });
+                setTimeout(fetchClones, 800);
+            } catch(e) {
+                showToast("Failed to send command", "error");
+            }
         }
 
         function installMore() {
             const qty = parseInt(document.getElementById('installQty').value);
-            sendAction('install_more', qty);
+            if(qty > 0) sendAction('install_more', qty);
         }
 
         function switchBranch() {
-            const b = document.getElementById('branchList').value;
-            sendAction('switch', b);
+            sendAction('switch', document.getElementById('branchList').value);
         }
         
         function updateAll() {
             sendAction('update_all', 0);
         }
 
-        fetchBranches();
-        fetchClones();
-        setInterval(fetchStatus, 1000);
-        setInterval(fetchClones, 5000);
+        function renderGrid() {
+            const grid = document.getElementById('cloneGrid');
+            const searchTerm = state.search.toLowerCase();
+            
+            const filtered = state.clones.filter(c => {
+                if(state.filter === 'installed' && !c.installed) return false;
+                if(state.filter === 'missing' && c.installed) return false;
+                
+                if(searchTerm && !c.pkg.toLowerCase().includes(searchTerm) && !c.id.toString().includes(searchTerm)) return false;
+                
+                return true;
+            });
+
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-sub)">No clones found matching criteria.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(c => `
+                <div class="clone-card ${c.installed ? 'status-online' : 'status-offline'}">
+                    <div class="card-top">
+                        <div class="clone-id">#${c.id}</div>
+                        <div class="${c.installed ? 'online' : 'offline'}">
+                             <span class="status-dot"></span>
+                        </div>
+                    </div>
+                    <div class="pkg-name" title="${c.pkg}">${c.pkg || 'Waiting for package...'}</div>
+                    
+                    <div class="card-actions">
+                        ${c.installed ? `
+                            <button class="btn-secondary" onclick="sendAction('install_one', ${c.id})">Update</button>
+                            <button class="btn-danger" onclick="sendAction('uninstall_one', ${c.id})">Del</button>
+                            <button class="btn-secondary full-width" onclick="sendAction('clear_data', ${c.id})">Clear Data</button>
+                        ` : `
+                            <button class="btn-primary full-width" onclick="sendAction('install_one', ${c.id})">Install Now</button>
+                        `}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleControls(disabled) {
+            const btns = document.querySelectorAll('button');
+            btns.forEach(b => b.disabled = disabled);
+        }
+
+        function updateLogs(newLogs) {
+            const logDiv = document.getElementById('logs');
+            const currentText = logDiv.innerHTML;
+            const newHtml = newLogs.map(l => `<div class="log-entry">${l}</div>`).join('');
+            if(logDiv.innerText.length !== newHtml.length) {
+                logDiv.innerHTML = newHtml;
+                logDiv.scrollTop = logDiv.scrollHeight;
+            }
+        }
+
+        let searchTimeout;
+        function handleSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                state.search = document.getElementById('search').value;
+                renderGrid();
+            }, 300);
+        }
+
+        function setFilter(type, el) {
+            state.filter = type;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            el.classList.add('active');
+            renderGrid();
+        }
+
+        function toggleTerminal() {
+            const drawer = document.getElementById('terminalDrawer');
+            drawer.classList.toggle('open');
+            document.getElementById('logToggleIcon').innerText = drawer.classList.contains('open') ? '▼' : '▲';
+        }
+
+        function showToast(msg, type = 'success') {
+            const container = document.getElementById('toastArea');
+            const el = document.createElement('div');
+            el.className = `toast ${type}`;
+            el.innerHTML = `<span>${type === 'success' ? '✔' : '⚠'}</span> ${msg}`;
+            container.appendChild(el);
+            
+            requestAnimationFrame(() => el.classList.add('show'));
+            setTimeout(() => {
+                el.classList.remove('show');
+                setTimeout(() => el.remove(), 300);
+            }, 3000);
+        }
+
+        init();
+
     </script>
 </body>
 </html>
