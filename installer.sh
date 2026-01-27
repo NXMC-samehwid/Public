@@ -18,11 +18,11 @@ mkdir -p ~/.termux/boot
 
 cat <<'EOF' > ~/.termux/boot/start_nxmc.sh
 #!/data/data/com.termux/files/usr/bin/bash
-tsu /data/NXMC/start_nxmc.sh &'
+tsu /data/NXMC/start_nxmc.sh > /dev/null &'
 EOF
 
 chmod +x ~/.termux/boot/start_nxmc.sh
 
 grep -q start_nxmc.sh ~/.bashrc || cat <<'EOF' >> ~/.bashrc
-tsu /data/NXMC/start_nxmc.sh &
+tsu /data/NXMC/start_nxmc.sh > /dev/null &
 EOF
