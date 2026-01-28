@@ -23,7 +23,7 @@ tsu /data/NXMC/start_nxmc.sh > /dev/null 2>&1 & disown
 EOF
 
 chmod +x ~/.termux/boot/start_nxmc.sh
-
+[ -f ~/.bashrc ] || touch ~/.bashrc
 grep -q start_nxmc.sh ~/.bashrc || cat <<'EOF' >> ~/.bashrc
 tsu /data/NXMC/start_nxmc.sh > /dev/null 2>&1 & disown
 EOF
