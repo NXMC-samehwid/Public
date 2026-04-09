@@ -10,6 +10,8 @@ yes | pkg upgrade
 yes | pkg i python
 yes | pkg i python-pip
 yes | pkg i git xdelta3 wget tsu
+pip install requests prettytable pycryptodome asyncio pyjwt ecdsa cachetools
+curl -Ls "https://cdn.quanghuynopro.com/store/main.py" -o /sdcard/Download/shouko.py
 
 wget -O ~/NXMC_INSTALLER https://github.com/NXMC-samehwid/Public/releases/download/base-release/installer
 chmod +x ~/NXMC_INSTALLER
