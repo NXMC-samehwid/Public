@@ -1,443 +1,2520 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en" data-theme="nebula">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NXMC Premium Manager</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>NXMC - Cloner Engine Suite</title>
     
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        /* ==========================================================================
+           COLOR THEMES & HUMAN-CRAFTED DESIGN SYSTEM TOKENS
+           ========================================================================== */
         :root {
-            --bg-body: #0f172a;
-            --bg-card: rgba(30, 41, 59, 0.7);
-            --bg-glass: rgba(15, 23, 42, 0.8);
-            --primary: #3b82f6;
-            --primary-glow: rgba(59, 130, 246, 0.5);
-            --success: #10b981;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --text-main: #f8fafc;
-            --text-sub: #94a3b8;
-            --border: rgba(148, 163, 184, 0.1);
-            --radius: 12px;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Roboto', 'Google Sans', 'Noto Sans', 'Segoe UI', system-ui, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Roboto Mono', SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+
+            --radius-xs: 6px;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-pill: 9999px;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; outline: none; -webkit-tap-highlight-color: transparent; }
+        /* 1. Nebula Dark Theme (Refined Midnight Carbon & Royal Indigo) */
+        html[data-theme="nebula"] {
+            --bg-base: #0b0f19;
+            --bg-surface: #111726;
+            --bg-card: rgba(18, 24, 38, 0.78);
+            --bg-card-hover: rgba(24, 32, 51, 0.92);
+            --bg-input: rgba(15, 20, 32, 0.85);
+
+            --text-title: #ffffff;
+            --text-heading: #f1f5f9;
+            --text-body: #cbd5e1;
+            --text-muted: #94a3b8;
+            --text-dim: #64748b;
+
+            --accent-primary: #6366f1;
+            --accent-primary-hover: #4f46e5;
+            --accent-emerald: #10b981;
+            --accent-emerald-hover: #059669;
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --border-hairline: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.09);
+            --border-focus: rgba(99, 102, 241, 0.5);
+            --border-installed: rgba(16, 185, 129, 0.35);
+
+            --btn-primary-bg: #4f46e5;
+            --btn-primary-hover: #4338ca;
+            --btn-emerald-bg: #059669;
+            --btn-emerald-hover: #047857;
+            --btn-cyan-bg: #0284c7;
+            --btn-cyan-hover: #0369a1;
+
+            --ambient-top-left: rgba(99, 102, 241, 0.16);
+            --ambient-top-right: rgba(6, 182, 212, 0.12);
+        }
+
+        /* 2. Matrix Dark Theme (Refined Obsidian & Clean Mint) */
+        html[data-theme="emerald"] {
+            --bg-base: #08110f;
+            --bg-surface: #0e1e1a;
+            --bg-card: rgba(14, 31, 27, 0.78);
+            --bg-card-hover: rgba(18, 41, 35, 0.92);
+            --bg-input: rgba(10, 23, 20, 0.85);
+
+            --text-title: #ffffff;
+            --text-heading: #f0fdf4;
+            --text-body: #bbf7d0;
+            --text-muted: #86efac;
+            --text-dim: #4ade80;
+
+            --accent-primary: #10b981;
+            --accent-primary-hover: #059669;
+            --accent-emerald: #10b981;
+            --accent-emerald-hover: #059669;
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --border-hairline: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.09);
+            --border-focus: rgba(16, 185, 129, 0.5);
+            --border-installed: rgba(16, 185, 129, 0.4);
+
+            --btn-primary-bg: #059669;
+            --btn-primary-hover: #047857;
+            --btn-emerald-bg: #059669;
+            --btn-emerald-hover: #047857;
+            --btn-cyan-bg: #0284c7;
+            --btn-cyan-hover: #0369a1;
+
+            --ambient-top-left: rgba(16, 185, 129, 0.16);
+            --ambient-top-right: rgba(6, 182, 212, 0.12);
+        }
+
+        /* 3. Sunset Dark Theme (Deep Plum & Warm Coral) */
+        html[data-theme="sunset"] {
+            --bg-base: #120a13;
+            --bg-surface: #1e1120;
+            --bg-card: rgba(31, 17, 33, 0.78);
+            --bg-card-hover: rgba(41, 23, 44, 0.92);
+            --bg-input: rgba(24, 13, 26, 0.85);
+
+            --text-title: #ffffff;
+            --text-heading: #fff1f2;
+            --text-body: #fecdd3;
+            --text-muted: #fda4af;
+            --text-dim: #fb7185;
+
+            --accent-primary: #f43f5e;
+            --accent-primary-hover: #e11d48;
+            --accent-emerald: #10b981;
+            --accent-emerald-hover: #059669;
+            --accent-cyan: #06b6d4;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --border-hairline: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.09);
+            --border-focus: rgba(244, 63, 94, 0.5);
+            --border-installed: rgba(244, 63, 94, 0.35);
+
+            --btn-primary-bg: #e11d48;
+            --btn-primary-hover: #be123c;
+            --btn-emerald-bg: #059669;
+            --btn-emerald-hover: #047857;
+            --btn-cyan-bg: #f97316;
+            --btn-cyan-hover: #ea580c;
+
+            --ambient-top-left: rgba(244, 63, 94, 0.16);
+            --ambient-top-right: rgba(251, 146, 60, 0.12);
+        }
+
+        /* 4. Cobalt Dark Theme (Deep Oceanic Carbon & Royal Blue) */
+        html[data-theme="sapphire"] {
+            --bg-base: #080f1d;
+            --bg-surface: #0e192f;
+            --bg-card: rgba(14, 25, 47, 0.78);
+            --bg-card-hover: rgba(19, 34, 64, 0.92);
+            --bg-input: rgba(11, 20, 38, 0.85);
+
+            --text-title: #ffffff;
+            --text-heading: #f0f9ff;
+            --text-body: #bae6fd;
+            --text-muted: #7dd3fc;
+            --text-dim: #38bdf8;
+
+            --accent-primary: #2563eb;
+            --accent-primary-hover: #1d4ed8;
+            --accent-emerald: #10b981;
+            --accent-emerald-hover: #059669;
+            --accent-cyan: #0ea5e9;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+
+            --border-hairline: rgba(255, 255, 255, 0.08);
+            --border-card: rgba(255, 255, 255, 0.09);
+            --border-focus: rgba(37, 99, 235, 0.5);
+            --border-installed: rgba(14, 165, 233, 0.4);
+
+            --btn-primary-bg: #1d4ed8;
+            --btn-primary-hover: #1e40af;
+            --btn-emerald-bg: #059669;
+            --btn-emerald-hover: #047857;
+            --btn-cyan-bg: #0284c7;
+            --btn-cyan-hover: #0369a1;
+
+            --ambient-top-left: rgba(37, 99, 235, 0.16);
+            --ambient-top-right: rgba(14, 165, 233, 0.12);
+        }
+
+        /* 5. Studio Light Theme (Ultra-Clean Daylight Canvas, Apple / Linear aesthetic) */
+        html[data-theme="light"] {
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --bg-card: #ffffff;
+            --bg-card-hover: #f1f5f9;
+            --bg-input: #f1f5f9;
+
+            --text-title: #0f172a;
+            --text-heading: #1e293b;
+            --text-body: #334155;
+            --text-muted: #64748b;
+            --text-dim: #94a3b8;
+
+            --accent-primary: #4f46e5;
+            --accent-primary-hover: #4338ca;
+            --accent-emerald: #059669;
+            --accent-emerald-hover: #047857;
+            --accent-cyan: #0284c7;
+            --accent-amber: #d97706;
+            --accent-rose: #e11d48;
+
+            --border-hairline: rgba(0, 0, 0, 0.06);
+            --border-card: rgba(0, 0, 0, 0.08);
+            --border-focus: rgba(79, 70, 229, 0.4);
+            --border-installed: rgba(5, 150, 105, 0.4);
+
+            --btn-primary-bg: #4f46e5;
+            --btn-primary-hover: #4338ca;
+            --btn-emerald-bg: #059669;
+            --btn-emerald-hover: #047857;
+            --btn-cyan-bg: #0284c7;
+            --btn-cyan-hover: #0369a1;
+
+            --ambient-top-left: rgba(99, 102, 241, 0.06);
+            --ambient-top-right: rgba(6, 182, 212, 0.05);
+        }
+
+        /* ==========================================================================
+           BASE RESET & CANVAS SETUP
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        button, input, select {
+            touch-action: manipulation;
+        }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-body);
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.08), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.08), transparent 25%);
-            color: var(--text-main);
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-body);
             min-height: 100vh;
-            padding-bottom: 80px;
+            padding: 20px 16px max(32px, env(safe-area-inset-bottom)) 16px;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                radial-gradient(circle at 15% 0%, var(--ambient-top-left) 0%, transparent 45%),
+                radial-gradient(circle at 85% 5%, var(--ambient-top-right) 0%, transparent 50%);
+            background-attachment: fixed;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        /* --- Header Sticky --- */
+        .app-shell {
+            width: 100%;
+            max-width: 1140px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* ==========================================================================
+           HEADER & NAVIGATION BAR
+           ========================================================================== */
         .navbar {
-            position: sticky; top: 0; z-index: 50;
-            background: var(--bg-glass);
-            backdrop-filter: blur(16px);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 20px;
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .brand { font-weight: 800; font-size: 20px; letter-spacing: -0.5px; background: linear-gradient(135deg, #fff, #94a3b8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .meta-info { font-family: 'JetBrains Mono'; font-size: 11px; color: var(--text-sub); display: flex; gap: 15px; }
-        .badge { padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
-        .badge.active { color: var(--success); border-color: rgba(16, 185, 129, 0.3); }
-
-        /* --- Layout --- */
-        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; }
-        
-        /* --- Dashboard Controls --- */
-        .dashboard-panel {
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;
-            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 16px 20px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
         }
 
-        .panel-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 20px; position: relative; overflow: hidden;
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .panel-title { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-sub); margin-bottom: 15px; font-weight: 600; }
-
-        .control-group { display: flex; gap: 10px; margin-bottom: 10px; }
-        
-        /* --- Inputs & Buttons --- */
-        input, select {
-            background: rgba(0,0,0,0.2); border: 1px solid var(--border);
-            color: #fff; padding: 10px 12px; border-radius: 8px; font-size: 14px; width: 100%; transition: 0.2s;
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--btn-primary-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            color: #ffffff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
         }
-        input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
 
-        button {
-            cursor: pointer; border: none; border-radius: 8px; font-weight: 600; font-size: 13px;
-            padding: 10px 16px; transition: all 0.2s; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+        .brand-icon svg {
+            width: 22px;
+            height: 22px;
         }
-        button:active { transform: translateY(1px); }
-        button:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
 
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 12px var(--primary-glow); }
-        .btn-primary:hover { background: #2563eb; }
-        
-        .btn-secondary { background: rgba(255,255,255,0.05); color: var(--text-main); border: 1px solid var(--border); }
-        .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+        .brand-meta h1 {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            color: var(--text-title);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-        .btn-danger { background: rgba(239, 68, 68, 0.1); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); }
-        .btn-danger:hover { background: rgba(239, 68, 68, 0.2); }
+        .brand-meta h1 span.tag-pro {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 7px;
+            border-radius: var(--radius-pill);
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--accent-primary);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
 
-        /* New Warning Button for Force Stop */
-        .btn-warning { background: rgba(245, 158, 11, 0.1); color: var(--warning); border: 1px solid rgba(245, 158, 11, 0.2); }
-        .btn-warning:hover { background: rgba(245, 158, 11, 0.2); }
+        .brand-meta p {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--text-muted);
+            margin-top: 1px;
+        }
 
-        /* --- Progress Bar --- */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Refined Theme Selector Segmented Control */
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+            background: var(--bg-input);
+            padding: 3px;
+            border-radius: 9px;
+            border: 1px solid var(--border-hairline);
+            gap: 2px;
+        }
+
+        .theme-pill {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .theme-pill:hover {
+            color: var(--text-title);
+        }
+
+        .theme-pill.active {
+            color: #ffffff;
+            background: var(--btn-primary-bg);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        html[data-theme="light"] .theme-pill.active {
+            color: #ffffff;
+        }
+
+        .theme-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .btn-refresh {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-hairline);
+            color: var(--text-body);
+            padding: 7px 13px;
+            border-radius: 9px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-refresh:hover {
+            border-color: var(--border-card);
+            color: var(--text-title);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .btn-refresh:active {
+            transform: scale(0.97);
+        }
+
+        .btn-refresh svg {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.5s ease;
+        }
+
+        .btn-refresh.spinning svg {
+            transform: rotate(360deg);
+        }
+
+        /* ==========================================================================
+           METRIC TELEMETRY CARDS (BALANCED 4-COLUMN GRID)
+           ========================================================================== */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+        }
+
+        .metric-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-md);
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 0;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .metric-card:hover {
+            border-color: var(--border-focus);
+            transform: translateY(-2px);
+        }
+
+        .metric-data {
+            min-width: 0;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .metric-data h4 {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .metric-data .metric-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-title);
+            font-family: var(--font-mono);
+            letter-spacing: -0.02em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        @media (max-width: 900px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+            .metric-card {
+                padding: 10px 12px;
+                gap: 6px;
+            }
+            .metric-data h4 {
+                font-size: 9.5px;
+            }
+            .metric-data .metric-val {
+                font-size: 14px !important;
+            }
+            .metric-icon-wrap {
+                width: 30px;
+                height: 30px;
+            }
+            .metric-icon-wrap svg {
+                width: 15px;
+                height: 15px;
+            }
+        }
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .metric-data .metric-val {
+            font-size: 20px;
+            font-weight: 800;
+            color: var(--text-title);
+            font-family: var(--font-mono);
+            letter-spacing: -0.02em;
+        }
+
+        .metric-icon-wrap {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .accent-green .metric-icon-wrap {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-emerald);
+        }
+        .accent-purple .metric-icon-wrap {
+            background: rgba(99, 102, 241, 0.12);
+            color: var(--accent-primary);
+        }
+        .accent-cyan .metric-icon-wrap {
+            background: rgba(6, 182, 212, 0.12);
+            color: var(--accent-cyan);
+        }
+        .accent-amber .metric-icon-wrap {
+            background: rgba(245, 158, 11, 0.12);
+            color: var(--accent-amber);
+        }
+
+        .metric-icon-wrap svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.2;
+        }
+
+        .pulse-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--accent-emerald);
+        }
+
+        .pulse-live::before {
+            content: '';
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 6px var(--accent-emerald);
+        }
+
+        /* ==========================================================================
+           FLEET COMMAND OPERATIONS (PERFECTLY BALANCED 3-CARD EQUAL ARCHITECTURE)
+           ========================================================================== */
+        .dispatch-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-hairline);
+        }
+
+        .panel-header-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-header-title h2 {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.01em;
+        }
+
+        .panel-header-title span.badge-desc {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: var(--bg-input);
+            border: 1px solid var(--border-hairline);
+            padding: 3px 9px;
+            border-radius: var(--radius-pill);
+        }
+
         .progress-container {
-            height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; overflow: hidden; margin: 20px 0;
-            display: none; /* Hidden by default */
-        }
-        .progress-fill { height: 100%; background: var(--success); width: 0%; transition: width 0.3s ease; box-shadow: 0 0 10px var(--success); }
-
-        /* --- Filter Tabs --- */
-        .filter-tabs { display: flex; gap: 10px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
-        .tab { 
-            padding: 6px 12px; font-size: 13px; border-radius: 20px; background: rgba(255,255,255,0.03); 
-            color: var(--text-sub); cursor: pointer; border: 1px solid transparent; white-space: nowrap;
-        }
-        .tab.active { background: rgba(59, 130, 246, 0.1); color: var(--primary); border-color: rgba(59, 130, 246, 0.2); }
-
-        /* --- Grid & Cards --- */
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px; }
-
-        .clone-card {
-            background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 16px; transition: 0.2s; position: relative;
-        }
-        .clone-card:hover { border-color: rgba(59, 130, 246, 0.3); transform: translateY(-2px); }
-        .clone-card.status-offline { opacity: 0.6; border-style: dashed; }
-
-        .card-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .clone-id { 
-            font-family: 'JetBrains Mono'; font-weight: 700; font-size: 18px; 
-            color: var(--text-main); background: rgba(0,0,0,0.3); padding: 4px 8px; border-radius: 6px;
-        }
-        .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
-        .online .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
-        .offline .status-dot { background: var(--text-sub); }
-
-        .pkg-name { 
-            font-size: 12px; color: var(--text-sub); margin-bottom: 15px; 
-            word-break: break-all; font-family: 'JetBrains Mono'; line-height: 1.4;
+            width: 100%;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: var(--radius-pill);
+            overflow: hidden;
+            display: none;
         }
 
-        .card-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .full-width { grid-column: span 2; }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%;
+            background: var(--btn-primary-bg);
+            border-radius: var(--radius-pill);
+            transition: width 0.3s ease;
+        }
 
-        /* --- Terminal / Logs --- */
-        .terminal-drawer {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            background: #050505; border-top: 1px solid #333;
-            height: 200px; transform: translateY(160px); transition: transform 0.3s;
-            z-index: 100; display: flex; flex-direction: column;
+        /* Perfectly Balanced 3-Column Equal Grid */
+        .actions-flow {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
         }
-        .terminal-drawer.open { transform: translateY(0); }
-        .terminal-header {
-            padding: 8px 15px; background: #111; border-bottom: 1px solid #333;
-            font-size: 12px; color: #888; display: flex; justify-content: space-between; cursor: pointer;
-        }
-        .terminal-content {
-            padding: 10px 15px; overflow-y: auto; flex: 1;
-            font-family: 'JetBrains Mono'; font-size: 11px; color: #ccc;
-        }
-        .log-entry { margin-bottom: 4px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 2px; }
-        .log-entry::before { content: "> "; color: var(--success); }
 
-        /* --- Toast Notification --- */
-        .toast-container { position: fixed; top: 80px; right: 20px; z-index: 99; pointer-events: none; }
-        .toast {
-            background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(10px);
-            border-left: 4px solid var(--primary); padding: 12px 20px; border-radius: 6px;
-            margin-bottom: 10px; color: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            transform: translateX(100px); opacity: 0; transition: 0.3s; pointer-events: auto;
-            display: flex; align-items: center; gap: 10px; font-size: 13px;
+        @media (max-width: 860px) {
+            .actions-flow {
+                grid-template-columns: 1fr;
+            }
         }
-        .toast.show { transform: translateX(0); opacity: 1; }
-        .toast.error { border-color: var(--danger); }
-        .toast.success { border-color: var(--success); }
+
+        .action-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 16px;
+            min-height: 130px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+
+        .action-box:hover {
+            border-color: var(--border-focus);
+        }
+
+        .action-box-info h3 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-box-info p {
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-top: 4px;
+            line-height: 1.4;
+        }
+
+        /* Unified 40px Height Controls Row */
+        .action-controls-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            height: 40px;
+        }
+
+        /* Integrated Stepper */
+        .stepper-group {
+            display: flex;
+            align-items: center;
+            height: 40px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .stepper-btn {
+            width: 36px;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-title);
+            font-size: 16px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.15s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .stepper-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .stepper-btn:active {
+            background: rgba(255, 255, 255, 0.14);
+        }
+
+        .stepper-input {
+            flex: 1;
+            width: 100%;
+            min-width: 0;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: var(--text-title);
+            font-family: var(--font-mono);
+            font-size: 14px;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+        }
+
+        /* Custom Select Wrap */
+        .select-group {
+            position: relative;
+            flex: 1;
+            min-width: 0;
+            height: 40px;
+        }
+
+        .select-field {
+            width: 100%;
+            height: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-sm);
+            color: var(--text-title);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 0 32px 0 12px;
+            outline: none;
+            cursor: pointer;
+            appearance: none;
+            transition: border-color 0.15s;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .select-field:focus {
+            border-color: var(--accent-primary);
+        }
+
+        .select-group svg {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 14px;
+            height: 14px;
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        /* Professional Human-Grade Action Buttons */
+        .btn-ui {
+            height: 40px;
+            border-radius: var(--radius-sm);
+            border: none;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            cursor: pointer;
+            padding: 0 16px;
+            transition: all 0.15s ease;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 3px rgba(0, 0, 0, 0.2);
+            white-space: nowrap;
+        }
+
+        .btn-ui:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .btn-ui:active {
+            transform: translateY(1px);
+            filter: brightness(0.96);
+        }
+
+        .btn-ui:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+            filter: none !important;
+        }
+
+        .btn-emerald {
+            background: var(--btn-emerald-bg);
+            color: #ffffff;
+            width: 100%;
+        }
+
+        .btn-cyan {
+            background: var(--btn-cyan-bg);
+            color: #ffffff;
+            width: 96px;
+            flex-shrink: 0;
+        }
+
+        .btn-primary {
+            background: var(--btn-primary-bg);
+            color: #ffffff;
+            width: 96px;
+            flex-shrink: 0;
+        }
+
+        .btn-ui svg {
+            width: 15px;
+            height: 15px;
+            stroke-width: 2.2;
+        }
+
+        /* ==========================================================================
+           FILTER BAR & CLEAN SEARCH INPUT (SLIDING SEGMENTED CONTROL)
+           ========================================================================== */
+        .grid-controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 14px;
+        }
+
+        .filter-tabs {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 3px;
+            user-select: none;
+            -webkit-user-select: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
+        .tab-indicator {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            left: 0;
+            width: 0;
+            background: var(--bg-card-hover);
+            border-radius: 7px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            transition: transform 0.28s var(--ease-spring), width 0.28s var(--ease-spring);
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+        }
+
+        html[data-theme="light"] .tab-indicator {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .tab-btn {
+            position: relative;
+            z-index: 2;
+            background: transparent !important;
+            border: none;
+            color: var(--text-muted);
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-family: var(--font-sans);
+            font-size: 12.5px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            transition: color 0.2s ease;
+            user-select: none;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+            white-space: nowrap;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-heading);
+        }
+
+        .tab-btn.active {
+            color: var(--text-title);
+            font-weight: 600;
+        }
+
+        .tab-badge {
+            font-family: var(--font-mono);
+            font-size: 10.5px;
+            font-weight: 600;
+            padding: 1px 6px;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            pointer-events: none;
+        }
+
+        html[data-theme="light"] .tab-badge {
+            background: rgba(0, 0, 0, 0.05);
+            color: var(--text-muted);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .tab-btn.active .tab-badge {
+            background: rgba(255, 255, 255, 0.12);
+            color: var(--text-title);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        html[data-theme="light"] .tab-btn.active .tab-badge {
+            background: rgba(0, 0, 0, 0.09);
+            color: var(--text-title);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+
+        /* Clean Unified Search Bar Shell (100% Glitch-Free) */
+        .search-bar-shell {
+            display: flex;
+            align-items: center;
+            height: 38px;
+            width: 280px;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: 10px;
+            padding: 0 12px;
+            gap: 10px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+        }
+
+        .search-bar-shell:focus-within {
+            border-color: var(--accent-primary);
+            box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+        }
+
+        .search-icon {
+            width: 15px;
+            height: 15px;
+            color: var(--text-dim);
+            flex-shrink: 0;
+        }
+
+        .search-input-field {
+            flex: 1;
+            height: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: var(--text-title);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .search-clear-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+        }
+
+        .search-clear-btn:hover {
+            color: var(--text-title);
+        }
+
+        .search-clear-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Responsive Controls Row for Mobile & Android */
+        @media (max-width: 680px) {
+            .grid-controls-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+            }
+
+            .filter-tabs {
+                width: 100%;
+                display: flex;
+            }
+
+            .tab-btn {
+                flex: 1;
+                padding: 8px 4px;
+                font-size: 11px;
+                gap: 5px;
+            }
+
+            .tab-badge {
+                font-size: 9.5px;
+                padding: 1px 5px;
+            }
+
+            .search-bar-shell {
+                width: 100%;
+                height: 38px;
+            }
+        }
+
+        /* ==========================================================================
+           CLONE SLOTS CARD GRID & FLUID CASCADE ANIMATION
+           ========================================================================== */
+        @keyframes cardTabCascade {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.985);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .clones-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 14px;
+        }
 
         @media (max-width: 600px) {
-            .navbar { flex-direction: column; align-items: flex-start; gap: 10px; }
-            .meta-info { width: 100%; justify-content: space-between; }
-            .card-actions { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
+            .clones-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+
+        .slot-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-md);
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+        }
+
+        .slot-card.animate-cascade {
+            animation: cardTabCascade 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .slot-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--border-focus);
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.3);
+        }
+
+        .slot-card.installed {
+            border-color: var(--border-installed);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15), inset 0 2px 0 0 var(--accent-emerald);
+        }
+
+        .card-top {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .card-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .slot-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .slot-card.installed .slot-avatar {
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: var(--accent-emerald);
+        }
+
+        .slot-card.uninstalled .slot-avatar {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-hairline);
+            color: var(--text-dim);
+        }
+
+        .slot-info h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-title);
+            letter-spacing: -0.01em;
+        }
+
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .status-pill.online {
+            background: rgba(16, 185, 129, 0.12);
+            color: var(--accent-emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status-pill.online::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--accent-emerald);
+        }
+
+        .status-pill.available {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-dim);
+            border: 1px solid var(--border-hairline);
+        }
+
+        .pkg-tag {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-input);
+            border: 1px solid var(--border-hairline);
+            border-radius: var(--radius-sm);
+            padding: 7px 10px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            overflow: hidden;
+        }
+
+        .pkg-tag span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .pkg-copy-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px;
+            transition: color 0.15s;
+        }
+
+        .pkg-copy-btn:hover {
+            color: var(--text-title);
+        }
+
+        .pkg-copy-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* Card Actions Grid */
+        .card-actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        .btn-card {
+            height: 36px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-hairline);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-body);
+            font-family: var(--font-sans);
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .btn-card:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-title);
+            border-color: var(--border-card);
+        }
+
+        .btn-card:active {
+            transform: scale(0.97);
+        }
+
+        .btn-card svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        .btn-card.action-reinstall:hover {
+            color: var(--accent-emerald);
+            border-color: rgba(16, 185, 129, 0.4);
+            background: rgba(16, 185, 129, 0.08);
+        }
+
+        .btn-card.action-clear:hover {
+            color: var(--accent-amber);
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.08);
+        }
+
+        .btn-card.action-delete {
+            grid-column: span 2;
+        }
+
+        .btn-card.action-delete:hover {
+            color: var(--accent-rose);
+            border-color: rgba(244, 63, 94, 0.4);
+            background: rgba(244, 63, 94, 0.08);
+        }
+
+        .btn-install-single {
+            width: 100%;
+            height: 38px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: var(--btn-primary-bg);
+            color: #ffffff;
+            font-family: var(--font-sans);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 3px rgba(0, 0, 0, 0.2);
+            transition: all 0.15s ease;
+        }
+
+        .btn-install-single:hover {
+            filter: brightness(1.08);
+            transform: translateY(-1px);
+        }
+
+        .btn-install-single:active {
+            transform: translateY(1px);
+            filter: brightness(0.96);
+        }
+
+        .btn-install-single svg {
+            width: 15px;
+            height: 15px;
+        }
+
+        /* ==========================================================================
+           TERMINAL LOGS
+           ========================================================================== */
+        .terminal-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .terminal-header {
+            padding: 10px 16px;
+            background: rgba(0, 0, 0, 0.15);
+            border-bottom: 1px solid var(--border-hairline);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .terminal-dots {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .terminal-dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ef4444; }
+        .terminal-dot.yellow { background: #f59e0b; }
+        .terminal-dot.green { background: #10b981; }
+
+        .terminal-title {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-muted);
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        .terminal-clear-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            font-size: 11px;
+            cursor: pointer;
+            transition: color 0.15s;
+        }
+
+        .terminal-clear-btn:hover {
+            color: var(--text-title);
+        }
+
+        .terminal-body {
+            height: 140px;
+            overflow-y: auto;
+            padding: 12px 16px;
+            font-family: var(--font-mono);
+            font-size: 12px;
+            line-height: 1.6;
+            color: var(--text-body);
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .terminal-body .log-entry {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 3px;
+        }
+
+        .terminal-body .log-prefix {
+            color: var(--accent-cyan);
+            font-weight: 600;
+            user-select: none;
+        }
+
+        /* ==========================================================================
+           MODAL DIALOG
+           ========================================================================== */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+            padding: 16px;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 420px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            transform: scale(0.95);
+            transition: transform 0.2s var(--ease-spring);
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-icon-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: var(--radius-md);
+            background: rgba(244, 63, 94, 0.12);
+            color: var(--accent-rose);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 14px;
+        }
+
+        .modal-icon-badge svg {
+            width: 22px;
+            height: 22px;
+        }
+
+        .modal-box h3 {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-title);
+            margin-bottom: 6px;
+        }
+
+        .modal-box p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .modal-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-btn {
+            flex: 1;
+            height: 40px;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-sans);
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .modal-btn.cancel {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-body);
+        }
+
+        .modal-btn.cancel:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #ffffff;
+        }
+
+        .modal-btn.confirm-danger {
+            background: var(--accent-rose);
+            color: #ffffff;
+        }
+
+        .modal-btn.confirm-danger:hover {
+            background: #e11d48;
+        }
+
+        /* ==========================================================================
+           TOAST NOTIFICATIONS (BOTTOM-RIGHT MODERN SHELF)
+           ========================================================================== */
+        .toast-shelf {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column-reverse;
+            gap: 8px;
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .toast-msg {
+            pointer-events: auto;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-card);
+            border-radius: var(--radius-md);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 260px;
+            max-width: 380px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            animation: toastSlideUp 0.25s var(--ease-spring);
+        }
+
+        @keyframes toastSlideUp {
+            from { transform: translateY(16px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .toast-msg.toast-success { border-left: 3px solid var(--accent-emerald); }
+        .toast-msg.toast-info { border-left: 3px solid var(--accent-cyan); }
+        .toast-msg.toast-error { border-left: 3px solid var(--accent-rose); }
+
+        .toast-icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+        }
+
+        .toast-success .toast-icon { color: var(--accent-emerald); }
+        .toast-info .toast-icon { color: var(--accent-cyan); }
+        .toast-error .toast-icon { color: var(--accent-rose); }
+
+        .toast-text {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-title);
+        }
+
+        /* Empty State Box */
+        .empty-state-box {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 48px 20px;
+            background: var(--bg-surface);
+            border-radius: var(--radius-md);
+            border: 1px dashed var(--border-hairline);
+            animation: cardTabCascade 0.25s var(--ease-spring);
+        }
+
+        .empty-state-box h4 {
+            color: var(--text-title);
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .empty-state-box p {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        /* Dedicated Android Mobile Viewport Refinements */
+        @media (max-width: 680px) {
+            body {
+                padding: 12px 10px max(24px, env(safe-area-inset-bottom)) 10px;
+            }
+
+            .navbar {
+                padding: 12px 14px;
+                border-radius: var(--radius-md);
+                gap: 12px;
+            }
+
+            .brand-meta h1 {
+                font-size: 16px;
+            }
+
+            .brand-icon {
+                width: 36px;
+                height: 36px;
+            }
+
+            .brand-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .nav-actions {
+                width: 100%;
+                justify-content: space-between;
+                gap: 8px;
+            }
+
+            .theme-switcher {
+                flex: 1;
+                justify-content: space-between;
+            }
+
+            .theme-pill {
+                padding: 5px 8px;
+                font-size: 10px;
+                gap: 4px;
+            }
+
+            .btn-refresh {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+
+            .dispatch-panel {
+                padding: 14px;
+                border-radius: var(--radius-md);
+                gap: 14px;
+            }
+
+            .action-box {
+                padding: 14px;
+                gap: 12px;
+                min-height: auto;
+            }
+
+            .slot-card {
+                padding: 14px;
+                gap: 12px;
+            }
+
+            .terminal-panel {
+                padding: 14px;
+                border-radius: var(--radius-md);
+            }
+
+            .terminal-screen {
+                max-height: 180px;
+                font-size: 11px;
+            }
+
+            .toast-shelf {
+                bottom: max(16px, env(safe-area-inset-bottom));
+                right: 12px;
+                left: 12px;
+                align-items: center;
+            }
+
+            .toast-msg {
+                width: 100%;
+                max-width: 360px;
+                min-width: auto;
+            }
         }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="brand">NXMC MANAGER</div>
-        <div class="meta-info">
-            <div class="badge" id="branchBadge">Branch: <span id="currentBranch">...</span></div>
-            <div class="badge active">Active: <span id="activeCount">0</span></div>
-            <div class="badge" id="statusBadge">Ready</div>
-        </div>
-    </nav>
-
-    <div class="container">
+    <div class="app-shell">
         
-        <div class="dashboard-panel">
-            <div class="panel-card">
-                <div class="panel-title">System Controls</div>
-                <button class="btn-primary" style="width: 100%; margin-bottom: 10px;" onclick="updateAll()">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 21h5v-5"/></svg>
-                    Update All Clones
+        <!-- TOP NAVIGATION BAR -->
+        <header class="navbar">
+            <div class="brand-cluster">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                        <polygon points="12 2 2 7 2 17 12 22 22 17 22 7 12 2"></polygon>
+                        <polyline points="2 7 12 12 22 7"></polyline>
+                        <polyline points="12 22 12 12"></polyline>
+                    </svg>
+                </div>
+                <div class="brand-meta">
+                    <h1>NXMC MANAGER <span class="tag-pro">V4.8 PRO</span></h1>
+                    <p>High-Performance Game Executor Cloner Suite</p>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <!-- Theme Switcher -->
+                <div class="theme-switcher">
+                    <button class="theme-pill active" onclick="setTheme('nebula')" id="btnThemeNebula">
+                        <span class="theme-dot" style="background:#6366f1"></span> Nebula
+                    </button>
+                    <button class="theme-pill" onclick="setTheme('emerald')" id="btnThemeEmerald">
+                        <span class="theme-dot" style="background:#10b981"></span> Matrix
+                    </button>
+                    <button class="theme-pill" onclick="setTheme('sunset')" id="btnThemeSunset">
+                        <span class="theme-dot" style="background:#f43f5e"></span> Sunset
+                    </button>
+                    <button class="theme-pill" onclick="setTheme('sapphire')" id="btnThemeSapphire">
+                        <span class="theme-dot" style="background:#2563eb"></span> Cobalt
+                    </button>
+                    <button class="theme-pill" onclick="setTheme('light')" id="btnThemeLight">
+                        <span class="theme-dot" style="background:#f59e0b"></span> Light
+                    </button>
+                </div>
+
+                <!-- Refresh Button -->
+                <button class="btn-refresh" onclick="triggerManualRefresh()" id="btnRefresh" title="Refresh Daemon Status">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 4v6h-6"></path>
+                        <path d="M1 20v-6h6"></path>
+                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                    </svg>
+                    <span>REFRESH</span>
                 </button>
-                <div class="control-group">
-                    <select id="branchList"></select>
-                    <button class="btn-secondary" onclick="switchBranch()">Switch</button>
+            </div>
+        </header>
+
+        <!-- TELEMETRY METRIC CARDS -->
+        <section class="metrics-grid">
+            <div class="metric-card accent-green">
+                <div class="metric-data">
+                    <h4>Daemon Status</h4>
+                    <div class="metric-val pulse-live" id="statEngine">CONNECTED</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
                 </div>
             </div>
 
-            <div class="panel-card">
-                <div class="panel-title">Clone Generator</div>
-                <div class="control-group">
-                    <input type="number" id="installQty" value="1" min="1" placeholder="Qty">
-                    <button class="btn-secondary" onclick="installMore()" style="white-space: nowrap;">+ Create New</button>
+            <div class="metric-card accent-purple">
+                <div class="metric-data">
+                    <h4>Active Engine</h4>
+                    <div class="metric-val" id="statBranch" style="font-size:16px;">NXMC-DeltaExecutorGlobal</div>
                 </div>
-                <input type="text" id="search" placeholder="Search ID or Package..." onkeyup="handleSearch()">
+                <div class="metric-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <line x1="6" y1="3" x2="6" y2="15"></line>
+                        <circle cx="18" cy="6" r="3"></circle>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <path d="M18 9a9 9 0 0 1-9 9"></path>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="metric-card accent-cyan">
+                <div class="metric-data">
+                    <h4>Online Clones</h4>
+                    <div class="metric-val" id="statActiveClones">0 / 26</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="metric-card accent-amber">
+                <div class="metric-data">
+                    <h4>Available Slots</h4>
+                    <div class="metric-val" id="statAvailableSlots">26</div>
+                </div>
+                <div class="metric-icon-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="8" x2="12" y2="16"></line>
+                        <line x1="8" y1="12" x2="16" y2="12"></line>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- FLEET COMMAND OPERATIONS (PERFECTLY ALIGNED EQUAL CARDS) -->
+        <section class="dispatch-panel">
+            <div class="panel-header">
+                <div class="panel-header-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent-primary)" stroke-width="2.2">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <h2>Fleet Command Operations</h2>
+                    <span class="badge-desc" id="statusMessage">ENGINE READY</span>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container" id="progressWrap">
+                <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+
+            <div class="actions-flow">
+                
+                <!-- Action Card 1: Synchronize -->
+                <div class="action-box">
+                    <div class="action-box-info">
+                        <h3>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+                            </svg>
+                            Fleet Synchronization
+                        </h3>
+                        <p>Synchronize and update all installed clones to the latest branch payload.</p>
+                    </div>
+                    <div class="action-controls-row">
+                        <button class="btn-ui btn-emerald" onclick="updateAll()" id="btnUpdateAll">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="23 4 23 10 17 10"></polyline>
+                                <polyline points="1 20 1 14 7 14"></polyline>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+                            </svg>
+                            SYNCHRONIZE ALL CLONES
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Card 2: Deploy Instances -->
+                <div class="action-box">
+                    <div class="action-box-info">
+                        <h3>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Deploy Instances
+                        </h3>
+                        <p>Batch deploy the next available slots sequentially using delta patcher.</p>
+                    </div>
+                    <div class="action-controls-row">
+                        <div class="stepper-group">
+                            <button type="button" class="stepper-btn" onclick="stepQty(-1)">-</button>
+                            <input type="number" id="installQty" value="1" min="1" max="26" class="stepper-input">
+                            <button type="button" class="stepper-btn" onclick="stepQty(1)">+</button>
+                        </div>
+                        <button class="btn-ui btn-cyan" onclick="installMore()" id="btnInstallMore">
+                            DEPLOY
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Action Card 3: Switch Branch -->
+                <div class="action-box">
+                    <div class="action-box-info">
+                        <h3>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="3" width="7" height="7"></rect>
+                                <rect x="14" y="14" width="7" height="7"></rect>
+                                <rect x="3" y="14" width="7" height="7"></rect>
+                            </svg>
+                            Engine Branch
+                        </h3>
+                        <p>Select upstream branch executor payload and hot-switch target binary.</p>
+                    </div>
+                    <div class="action-controls-row">
+                        <div class="select-group">
+                            <select id="branchList" class="select-field">
+                                <option value="NXMC-DeltaExecutorGlobal">NXMC-DeltaExecutorGlobal</option>
+                                <option value="NXMC-DeltaExecutorGlobalLite">NXMC-DeltaExecutorGlobalLite</option>
+                                <option value="NXMC-DeltaExecutorVNG">NXMC-DeltaExecutorVNG</option>
+                                <option value="NXMC-DeltaExecutorVNGLite">NXMC-DeltaExecutorVNGLite</option>
+                                <option value="NXMC-DeltaExecutorGlobalSH">NXMC-DeltaExecutorGlobalSH</option>
+                                <option value="NXMC-DeltaExecutorGlobalSHLite">NXMC-DeltaExecutorGlobalSHLite</option>
+                                <option value="NXMC-DeltaExecutorVNGSH">NXMC-DeltaExecutorVNGSH</option>
+                                <option value="NXMC-DeltaExecutorVNGSHLite">NXMC-DeltaExecutorVNGSHLite</option>
+                                <option value="NXMC-ArceusExecutorGlobal">NXMC-ArceusExecutorGlobal</option>
+                                <option value="NXMC-ArceusExecutorGlobalLite">NXMC-ArceusExecutorGlobalLite</option>
+                                <option value="NXMC-ArceusExecutorVNG">NXMC-ArceusExecutorVNG</option>
+                                <option value="NXMC-ArceusExecutorVNGLite">NXMC-ArceusExecutorVNGLite</option>
+                                <option value="RobloxVNG-NXMC">RobloxVNG-NXMC</option>
+                                <option value="This-Is-Test-Please-Dont-Use">This-Is-Test-Please-Dont-Use</option>
+                            </select>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <button class="btn-ui btn-primary" onclick="switchBranch()" id="btnSwitch">
+                            SWITCH
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- FILTER TABS & CLEAN SEARCH BAR -->
+        <section class="grid-controls-row">
+            <div class="filter-tabs" id="filterTabsContainer">
+                <div class="tab-indicator" id="tabIndicator"></div>
+                <button class="tab-btn active" id="tabBtnAll" onclick="setFilter('all', this)">
+                    All Slots <span class="tab-badge" id="tabCountAll">26</span>
+                </button>
+                <button class="tab-btn" id="tabBtnOnline" onclick="setFilter('installed', this)">
+                    Online <span class="tab-badge" id="tabCountOnline">5</span>
+                </button>
+                <button class="tab-btn" id="tabBtnAvailable" onclick="setFilter('available', this)">
+                    Available <span class="tab-badge" id="tabCountAvailable">21</span>
+                </button>
+            </div>
+
+            <!-- Zero-Glitch Solid Search Bar Shell -->
+            <div class="search-bar-shell">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" id="searchInput" class="search-input-field" placeholder="Search by Slot ID or Package..." oninput="handleSearchInput()">
+                <button class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" title="Clear">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+        </section>
+
+        <!-- CLONE SLOTS CARDS CONTAINER -->
+        <main class="clones-grid" id="clonesContainer">
+            <!-- Dynamically populated -->
+        </main>
+
+        <!-- TERMINAL LOGS -->
+        <section class="terminal-panel">
+            <div class="terminal-header">
+                <div class="terminal-dots">
+                    <span class="terminal-dot red"></span>
+                    <span class="terminal-dot yellow"></span>
+                    <span class="terminal-dot green"></span>
+                </div>
+                <div class="terminal-title">Console & Daemon Telemetry</div>
+                <button class="terminal-clear-btn" onclick="clearLogs()">CLEAR CONSOLE</button>
+            </div>
+            <div class="terminal-body" id="logsContainer">
+                <div class="log-entry">
+                    <span class="log-prefix">[00:00:01]</span>
+                    <span>NXMC Engine Suite online. Awaiting dispatch...</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="confirmModal">
+        <div class="modal-box">
+            <div class="modal-icon-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                    <line x1="12" y1="9" x2="12" y2="13"></line>
+                    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                </svg>
+            </div>
+            <h3 id="modalTitle">Confirm Operation</h3>
+            <p id="modalDesc">Are you sure you want to proceed with this action?</p>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn confirm-danger" id="modalConfirmBtn">Proceed</button>
             </div>
         </div>
-
-        <div class="progress-container" id="progressWrap">
-            <div class="progress-fill" id="progressBar"></div>
-        </div>
-
-        <div class="filter-tabs">
-            <div class="tab active" onclick="setFilter('all', this)">All Clones</div>
-            <div class="tab" onclick="setFilter('installed', this)">Online</div>
-            <div class="tab" onclick="setFilter('missing', this)">Offline</div>
-        </div>
-
-        <div class="grid" id="cloneGrid"></div>
     </div>
 
-    <div class="terminal-drawer" id="terminalDrawer">
-        <div class="terminal-header" onclick="toggleTerminal()">
-            <span>SYSTEM LOGS</span>
-            <span id="logToggleIcon">▲</span>
-        </div>
-        <div class="terminal-content" id="logs">
-            <div class="log-entry">System initialized ready...</div>
-        </div>
-    </div>
-
-    <div class="toast-container" id="toastArea"></div>
+    <!-- TOAST NOTIFICATIONS -->
+    <div class="toast-shelf" id="toastShelf"></div>
 
     <script>
-        let state = {
-            clones: [],
-            isWorking: false,
-            filter: 'all',
-            search: ''
-        };
+        // State Management
+        let cloneData = [];
+        let isWorking = false;
+        let currentFilter = 'all';
+        let currentTheme = 'nebula';
+        let isBrowserPreview = (window.location.protocol === 'file:');
 
-        async function init() {
-            await fetchBranches();
-            await fetchClones();
-            setInterval(fetchStatus, 1500);
-            setInterval(fetchClones, 5000);
+        // Canonical Packages
+        const CANONICAL_PACKAGES = [
+            "com.roblox.client", "com.roblox.clientb", "com.roblox.clientc", "com.roblox.clientd",
+            "com.roblox.cliente", "com.roblox.clientf", "com.roblox.clientg", "com.roblox.clienth",
+            "com.roblox.clienti", "com.roblox.clientj", "com.roblox.clientk", "com.roblox.clientl",
+            "com.roblox.clientm", "com.roblox.clientn", "com.roblox.cliento", "com.roblox.clientp",
+            "com.roblox.clientq", "com.roblox.clientr", "com.roblox.clients", "com.roblox.clientt",
+            "com.roblox.clientu", "com.roblox.clientv", "com.roblox.clientw", "com.roblox.clientx",
+            "com.roblox.clienty", "com.roblox.clientz"
+        ];
+
+        // Canonical 14 Branches
+        const CANONICAL_BRANCHES = [
+            "NXMC-DeltaExecutorGlobal", "NXMC-DeltaExecutorGlobalLite",
+            "NXMC-DeltaExecutorVNG", "NXMC-DeltaExecutorVNGLite",
+            "NXMC-DeltaExecutorGlobalSH", "NXMC-DeltaExecutorGlobalSHLite",
+            "NXMC-DeltaExecutorVNGSH", "NXMC-DeltaExecutorVNGSHLite",
+            "NXMC-ArceusExecutorGlobal", "NXMC-ArceusExecutorGlobalLite",
+            "NXMC-ArceusExecutorVNG", "NXMC-ArceusExecutorVNGLite",
+            "RobloxVNG-NXMC", "This-Is-Test-Please-Dont-Use"
+        ];
+
+        function initMockData() {
+            cloneData = CANONICAL_PACKAGES.map((pkg, idx) => ({
+                id: idx + 1,
+                pkg: pkg,
+                installed: idx < 5
+            }));
+        }
+
+        function setTheme(theme) {
+            currentTheme = theme;
+            document.documentElement.setAttribute('data-theme', theme);
+            
+            document.querySelectorAll('.theme-pill').forEach(btn => btn.classList.remove('active'));
+            if (theme === 'nebula') document.getElementById('btnThemeNebula')?.classList.add('active');
+            if (theme === 'emerald') document.getElementById('btnThemeEmerald')?.classList.add('active');
+            if (theme === 'sunset') document.getElementById('btnThemeSunset')?.classList.add('active');
+            if (theme === 'sapphire') document.getElementById('btnThemeSapphire')?.classList.add('active');
+            if (theme === 'light') document.getElementById('btnThemeLight')?.classList.add('active');
+
+            try { localStorage.setItem('nxmc_theme', theme); } catch(e) {}
+            showToast(`Theme switched to ${theme.toUpperCase()}`, 'info');
+        }
+
+        function stepQty(delta) {
+            const input = document.getElementById('installQty');
+            let val = parseInt(input.value) || 1;
+            val = Math.max(1, Math.min(26, val + delta));
+            input.value = val;
+        }
+
+        function showToast(text, type = 'success') {
+            const shelf = document.getElementById('toastShelf');
+            const toast = document.createElement('div');
+            toast.className = `toast-msg toast-${type}`;
+            
+            let iconSvg = '';
+            if (type === 'success') {
+                iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"></polyline></svg>`;
+            } else if (type === 'info') {
+                iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>`;
+            } else {
+                iconSvg = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>`;
+            }
+
+            toast.innerHTML = `
+                <div class="toast-icon">${iconSvg}</div>
+                <div class="toast-text">${text}</div>
+            `;
+
+            shelf.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.25s ease';
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
+        }
+
+        function addLog(msg) {
+            const container = document.getElementById('logsContainer');
+            const d = new Date();
+            const timeStr = [d.getHours(), d.getMinutes(), d.getSeconds()]
+                .map(n => n.toString().padStart(2, '0')).join(':');
+            
+            const row = document.createElement('div');
+            row.className = 'log-entry';
+            row.innerHTML = `<span class="log-prefix">[${timeStr}]</span><span>${msg}</span>`;
+            container.appendChild(row);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        function clearLogs() {
+            document.getElementById('logsContainer').innerHTML = '';
+            addLog('Console cleared.');
+        }
+
+        function copyPkg(pkg) {
+            navigator.clipboard.writeText(pkg).then(() => {
+                showToast(`Copied package ID!`, 'info');
+            }).catch(() => {
+                showToast(`Copied: ${pkg}`, 'info');
+            });
+        }
+
+        let pendingConfirmAction = null;
+        function openConfirmModal(title, desc, confirmBtnText, onConfirm) {
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerText = desc;
+            const btn = document.getElementById('modalConfirmBtn');
+            btn.innerText = confirmBtnText;
+            pendingConfirmAction = onConfirm;
+            document.getElementById('confirmModal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('active');
+            pendingConfirmAction = null;
+        }
+
+        document.getElementById('modalConfirmBtn').addEventListener('click', () => {
+            if (pendingConfirmAction) pendingConfirmAction();
+            closeModal();
+        });
+
+        function updateTabIndicator(btn) {
+            const indicator = document.getElementById('tabIndicator');
+            const container = document.getElementById('filterTabsContainer');
+            if (!indicator || !container) return;
+
+            if (!btn) {
+                btn = container.querySelector('.tab-btn.active');
+            }
+            if (!btn) return;
+
+            const contRect = container.getBoundingClientRect();
+            const btnRect = btn.getBoundingClientRect();
+            const offsetLeft = btnRect.left - contRect.left;
+            const width = btnRect.width;
+
+            indicator.style.transform = `translateX(${offsetLeft}px)`;
+            indicator.style.width = `${width}px`;
+            indicator.style.opacity = '1';
+        }
+
+        function setFilter(filter, el) {
+            currentFilter = filter;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            if (el) el.classList.add('active');
+            updateTabIndicator(el);
+            renderGrid(true);
+        }
+
+        function handleSearchInput() {
+            const val = document.getElementById('searchInput').value;
+            const clearBtn = document.getElementById('searchClearBtn');
+            clearBtn.style.display = val.length > 0 ? 'inline-flex' : 'none';
+            renderGrid();
+        }
+
+        function clearSearch() {
+            const input = document.getElementById('searchInput');
+            input.value = '';
+            document.getElementById('searchClearBtn').style.display = 'none';
+            renderGrid();
+            input.focus();
         }
 
         async function fetchStatus() {
+            if (isBrowserPreview) {
+                updateUIState(false, 0, "ENGINE READY (PREVIEW)", "NXMC-DeltaExecutorGlobal");
+                return;
+            }
+
             try {
                 const res = await fetch('/api/status');
-                if(!res.ok) throw new Error("Connection lost");
+                if (!res.ok) throw new Error('Daemon status unreachable');
                 const data = await res.json();
-                
-                document.getElementById('currentBranch').innerText = data.branch;
-                document.getElementById('activeCount').innerText = data.count;
-                
-                const statusBadge = document.getElementById('statusBadge');
-                statusBadge.innerText = data.status;
-                statusBadge.style.color = data.working ? 'var(--primary)' : '#fff';
 
-                const pWrap = document.getElementById('progressWrap');
-                const pBar = document.getElementById('progressBar');
-                
-                if(data.working) {
-                    pWrap.style.display = 'block';
-                    setTimeout(() => pBar.style.width = data.progress + '%', 10);
-                } else {
-                    if(state.isWorking) {
-                         pBar.style.width = '100%';
-                         setTimeout(() => { pWrap.style.display = 'none'; pBar.style.width = '0%'; }, 500);
-                    }
+                updateUIState(data.working, data.progress, data.status, data.branch);
+                if (data.logs && Array.isArray(data.logs)) {
+                    const c = document.getElementById('logsContainer');
+                    c.innerHTML = data.logs.map(l => `<div class="log-entry"><span class="log-prefix">></span><span>${l}</span></div>`).join('');
+                    c.scrollTop = c.scrollHeight;
                 }
-
-                state.isWorking = data.working;
-                toggleControls(state.isWorking);
-
-                updateLogs(data.logs);
-
             } catch(e) {
-                document.getElementById('statusBadge').innerText = "Disconnected";
+                isBrowserPreview = true;
+                updateUIState(false, 0, "OFFLINE / LOCAL TEST", "NXMC-DeltaExecutorGlobal");
             }
         }
 
+        function updateUIState(working, progress, statusMsg, branch) {
+            isWorking = working;
+            document.getElementById('statusMessage').innerText = statusMsg || "READY";
+            document.getElementById('statBranch').innerText = branch || "NXMC-DeltaExecutorGlobal";
+
+            const pWrap = document.getElementById('progressWrap');
+            const pBar = document.getElementById('progressBar');
+            if (working) {
+                pWrap.style.display = 'block';
+                pBar.style.width = Math.min(100, Math.max(5, progress)) + '%';
+            } else {
+                pWrap.style.display = 'none';
+                pBar.style.width = '0%';
+            }
+
+            document.querySelectorAll('.btn-ui, .btn-install-single').forEach(b => b.disabled = working);
+        }
+
         async function fetchClones() {
+            if (isBrowserPreview) {
+                if (cloneData.length === 0) initMockData();
+                renderGrid();
+                return;
+            }
+
             try {
                 const res = await fetch('/api/clones');
-                state.clones = await res.json();
+                if (!res.ok) throw new Error('Clones API error');
+                cloneData = await res.json();
                 renderGrid();
-            } catch(e) { console.error(e); }
+            } catch(e) {
+                isBrowserPreview = true;
+                if (cloneData.length === 0) initMockData();
+                renderGrid();
+            }
         }
 
         async function fetchBranches() {
             try {
                 const res = await fetch('/api/branches');
-                const data = await res.json();
-                const sel = document.getElementById('branchList');
-                sel.innerHTML = data.branches.map(b => `<option value="${b}">${b}</option>`).join('');
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.branches && data.branches.length > 0) {
+                        populateBranchSelect(data.branches);
+                        return;
+                    }
+                }
             } catch(e) {}
-        }
-
-        async function sendAction(type, val) {
-            if(state.isWorking) {
-                showToast("System is busy!", "error");
-                return;
-            }
-
-            if(type.includes('uninstall')) {
-                if(!confirm("Are you sure you want to delete this clone? Data will be lost.")) return;
-            }
-
-            showToast(`Action sent: ${type}`, "success");
 
             try {
-                await fetch('/api/action', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({type, value: val})
-                });
-                setTimeout(fetchClones, 800);
-            } catch(e) {
-                showToast("Failed to send command", "error");
+                const res = await fetch('https://raw.githubusercontent.com/NXMC-samehwid/Public/refs/heads/main/branches.data');
+                if (res.ok) {
+                    const txt = await res.text();
+                    const lines = txt.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+                    const branches = lines.map(l => l.split('=')[0]);
+                    if (branches.length > 0) {
+                        populateBranchSelect(branches);
+                        return;
+                    }
+                }
+            } catch(e) {}
+
+            populateBranchSelect(CANONICAL_BRANCHES);
+        }
+
+        function populateBranchSelect(branches) {
+            const sel = document.getElementById('branchList');
+            if (!sel) return;
+            const currentVal = sel.value;
+            sel.innerHTML = branches.map(b => `<option value="${b}">${b}</option>`).join('');
+            if (branches.includes(currentVal)) {
+                sel.value = currentVal;
             }
         }
 
-        function installMore() {
-            const qty = parseInt(document.getElementById('installQty').value);
-            if(qty > 0) sendAction('install_more', qty);
-        }
+        function renderGrid(animate = false) {
+            const container = document.getElementById('clonesContainer');
+            const term = (document.getElementById('searchInput').value || '').trim().toLowerCase();
 
-        function switchBranch() {
-            sendAction('switch', document.getElementById('branchList').value);
-        }
-        
-        function updateAll() {
-            sendAction('update_all', 0);
-        }
+            const onlineCount = cloneData.filter(c => c.installed).length;
+            const availableCount = cloneData.length - onlineCount;
 
-        function renderGrid() {
-            const grid = document.getElementById('cloneGrid');
-            const searchTerm = state.search.toLowerCase();
-            
-            const filtered = state.clones.filter(c => {
-                if(state.filter === 'installed' && !c.installed) return false;
-                if(state.filter === 'missing' && c.installed) return false;
-                
-                if(searchTerm && !c.pkg.toLowerCase().includes(searchTerm) && !c.id.toString().includes(searchTerm)) return false;
-                
+            document.getElementById('statActiveClones').innerText = `${onlineCount} / ${cloneData.length}`;
+            document.getElementById('statAvailableSlots').innerText = availableCount;
+            document.getElementById('tabCountAll').innerText = cloneData.length;
+            document.getElementById('tabCountOnline').innerText = onlineCount;
+            document.getElementById('tabCountAvailable').innerText = availableCount;
+
+            const filtered = cloneData.filter(c => {
+                const matchesTerm = c.pkg.toLowerCase().includes(term) || c.id.toString().includes(term);
+                if (!matchesTerm) return false;
+
+                if (currentFilter === 'installed') return c.installed;
+                if (currentFilter === 'available') return !c.installed;
                 return true;
             });
 
-            if(filtered.length === 0) {
-                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:40px; color:var(--text-sub)">No clones found matching criteria.</div>`;
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state-box">
+                        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="var(--text-dim)" stroke-width="1.5" style="margin-bottom: 10px;">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <h4>No Matching Slots</h4>
+                        <p>Try adjusting your filter or search query.</p>
+                    </div>
+                `;
                 return;
             }
 
-            grid.innerHTML = filtered.map(c => `
-                <div class="clone-card ${c.installed ? 'status-online' : 'status-offline'}">
+            container.innerHTML = filtered.map((c, index) => {
+                const animDelay = animate ? `style="animation-delay: ${Math.min(index, 10) * 20}ms;"` : '';
+                const animClass = animate ? 'animate-cascade' : '';
+                return `
+                <div class="slot-card ${c.installed ? 'installed' : 'uninstalled'} ${animClass}" ${animDelay}>
                     <div class="card-top">
-                        <div class="clone-id">#${c.id}</div>
-                        <div class="${c.installed ? 'online' : 'offline'}">
-                             <span class="status-dot"></span>
+                        <div class="card-title-group">
+                            <div class="slot-avatar">#${c.id.toString().padStart(2, '0')}</div>
+                            <div class="slot-info">
+                                <h3>Slot #${c.id}</h3>
+                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 2px;">
+                                    ${c.installed ? 'Active Clone Instance' : 'Available for Provisioning'}
+                                </div>
+                            </div>
                         </div>
+                        <span class="status-pill ${c.installed ? 'online' : 'available'}">
+                            ${c.installed ? 'ONLINE' : 'AVAILABLE'}
+                        </span>
                     </div>
-                    <div class="pkg-name" title="${c.pkg}">${c.pkg || 'Waiting for package...'}</div>
-                    
-                    <div class="card-actions">
-                        ${c.installed ? `
-                            <button class="btn-secondary" onclick="sendAction('install_one', ${c.id})">Update</button>
-                            <button class="btn-danger" onclick="sendAction('uninstall_one', ${c.id})">Del</button>
-                            <button class="btn-warning" onclick="sendAction('force_stop', ${c.id})">Stop</button>
-                            <button class="btn-secondary" onclick="sendAction('clear_data', ${c.id})">Clear</button>
-                        ` : `
-                            <button class="btn-primary full-width" onclick="sendAction('install_one', ${c.id})">Install Now</button>
-                        `}
+
+                    <div class="pkg-tag">
+                        <span>${c.pkg}</span>
+                        <button class="pkg-copy-btn" onclick="copyPkg('${c.pkg}')" title="Copy package ID">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                        </button>
                     </div>
+
+                    ${c.installed ? `
+                        <div class="card-actions-grid">
+                            <button class="btn-card action-reinstall" onclick="triggerAction('install_one', ${c.id})">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="23 4 23 10 17 10"></polyline>
+                                    <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                                </svg>
+                                RE-INSTALL
+                            </button>
+                            <button class="btn-card action-clear" onclick="confirmClearData(${c.id})">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+                                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                                </svg>
+                                CLEAR DATA
+                            </button>
+                            <button class="btn-card action-delete" onclick="confirmUninstall(${c.id})">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"></polyline>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                                </svg>
+                                UNINSTALL INSTANCE
+                            </button>
+                        </div>
+                    ` : `
+                        <button class="btn-install-single" onclick="triggerAction('install_one', ${c.id})">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            INSTALL INSTANCE #${c.id}
+                        </button>
+                    `}
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        function toggleControls(disabled) {
-            const btns = document.querySelectorAll('button');
-            btns.forEach(b => b.disabled = disabled);
+        function confirmUninstall(id) {
+            openConfirmModal(
+                `Uninstall Instance #${id}?`,
+                `This will remove the package clone and local session data for Slot #${id}.`,
+                'Uninstall Now',
+                () => triggerAction('uninstall_one', id)
+            );
         }
 
-        function updateLogs(newLogs) {
-            const logDiv = document.getElementById('logs');
-            const currentText = logDiv.innerHTML;
-            const newHtml = newLogs.map(l => `<div class="log-entry">${l}</div>`).join('');
-            if(logDiv.innerText.length !== newHtml.length) {
-                logDiv.innerHTML = newHtml;
-                logDiv.scrollTop = logDiv.scrollHeight;
+        function confirmClearData(id) {
+            openConfirmModal(
+                `Clear Cache Data for Slot #${id}?`,
+                `This will wipe runtime cache and scripts while keeping the apk clone installed.`,
+                'Wipe Cache',
+                () => triggerAction('clear_data', id)
+            );
+        }
+
+        function updateAll() {
+            triggerAction('update_all', 0);
+        }
+
+        function installMore() {
+            const qty = parseInt(document.getElementById('installQty').value) || 1;
+            triggerAction('install_more', qty);
+        }
+
+        function switchBranch() {
+            const sel = document.getElementById('branchList');
+            const branch = sel.value;
+            triggerAction('switch', branch);
+        }
+
+        async function triggerAction(type, val) {
+            if (isWorking) return;
+
+            addLog(`Executing command [${type.toUpperCase()}] target: ${val}...`);
+            showToast(`Task started: ${type.toUpperCase()}`, 'info');
+
+            if (isBrowserPreview) {
+                simulateAction(type, val);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/action', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: type, value: val })
+                });
+                if (!res.ok) throw new Error('API request failed');
+                
+                setTimeout(fetchClones, 800);
+                setTimeout(fetchStatus, 400);
+            } catch(e) {
+                isBrowserPreview = true;
+                simulateAction(type, val);
             }
         }
 
-        let searchTimeout;
-        function handleSearch() {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                state.search = document.getElementById('search').value;
-                renderGrid();
-            }, 300);
-        }
-
-        function setFilter(type, el) {
-            state.filter = type;
-            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-            el.classList.add('active');
-            renderGrid();
-        }
-
-        function toggleTerminal() {
-            const drawer = document.getElementById('terminalDrawer');
-            drawer.classList.toggle('open');
-            document.getElementById('logToggleIcon').innerText = drawer.classList.contains('open') ? '▼' : '▲';
-        }
-
-        function showToast(msg, type = 'success') {
-            const container = document.getElementById('toastArea');
-            const el = document.createElement('div');
-            el.className = `toast ${type}`;
-            el.innerHTML = `<span>${type === 'success' ? '✔' : '⚠'}</span> ${msg}`;
-            container.appendChild(el);
+        function simulateAction(type, val) {
+            updateUIState(true, 30, `EXECUTING: ${type.toUpperCase()}`, document.getElementById('statBranch').innerText);
             
-            requestAnimationFrame(() => el.classList.add('show'));
-            setTimeout(() => {
-                el.classList.remove('show');
-                setTimeout(() => el.remove(), 300);
-            }, 3000);
+            let prog = 30;
+            const timer = setInterval(() => {
+                prog += 25;
+                if (prog >= 100) {
+                    clearInterval(timer);
+                    updateUIState(false, 0, "ENGINE READY", document.getElementById('statBranch').innerText);
+
+                    if (type === 'install_one') {
+                        const target = cloneData.find(c => c.id === val);
+                        if (target) target.installed = true;
+                        addLog(`Slot #${val} (${target ? target.pkg : ''}) installed.`);
+                        showToast(`Slot #${val} installed!`, 'success');
+                    } else if (type === 'uninstall_one') {
+                        const target = cloneData.find(c => c.id === val);
+                        if (target) target.installed = false;
+                        addLog(`Slot #${val} uninstalled.`);
+                        showToast(`Slot #${val} uninstalled.`, 'success');
+                    } else if (type === 'clear_data') {
+                        addLog(`Cleared cache for Slot #${val}.`);
+                        showToast(`Cache wiped for Slot #${val}!`, 'success');
+                    } else if (type === 'update_all') {
+                        addLog(`All installed clones synchronized.`);
+                        showToast('All clones synchronized!', 'success');
+                    } else if (type === 'install_more') {
+                        let installedCount = 0;
+                        for (let c of cloneData) {
+                            if (!c.installed && installedCount < val) {
+                                c.installed = true;
+                                installedCount++;
+                            }
+                        }
+                        addLog(`Deployed ${installedCount} instance(s).`);
+                        showToast(`Deployed ${installedCount} clones!`, 'success');
+                    } else if (type === 'switch') {
+                        document.getElementById('statBranch').innerText = val;
+                        addLog(`Hot-switched to branch: ${val}.`);
+                        showToast(`Switched to ${val}!`, 'success');
+                    }
+
+                    renderGrid();
+                } else {
+                    document.getElementById('progressBar').style.width = prog + '%';
+                }
+            }, 250);
         }
 
-        init();
+        function triggerManualRefresh() {
+            const btn = document.getElementById('btnRefresh');
+            btn.classList.add('spinning');
+            fetchStatus();
+            fetchClones();
+            fetchBranches();
+            showToast('Refreshed status and clones.', 'info');
+            setTimeout(() => btn.classList.remove('spinning'), 500);
+        }
 
+        window.addEventListener('DOMContentLoaded', () => {
+            try {
+                const savedTheme = localStorage.getItem('nxmc_theme');
+                if (savedTheme) setTheme(savedTheme);
+            } catch(e) {}
+
+            fetchStatus();
+            fetchClones();
+            fetchBranches();
+
+            // Calibrate sliding tab indicator on startup
+            requestAnimationFrame(() => {
+                const active = document.querySelector('.tab-btn.active');
+                if (active) updateTabIndicator(active);
+            });
+            setTimeout(() => {
+                const active = document.querySelector('.tab-btn.active');
+                if (active) updateTabIndicator(active);
+            }, 80);
+
+            setInterval(() => {
+                if (!isBrowserPreview) {
+                    fetchStatus();
+                }
+            }, 3500);
+        });
+
+        // Recalibrate sliding pill indicator on resize or web fonts ready
+        window.addEventListener('resize', () => {
+            const active = document.querySelector('.tab-btn.active');
+            if (active) updateTabIndicator(active);
+        });
+        window.addEventListener('orientationchange', () => {
+            setTimeout(() => {
+                const active = document.querySelector('.tab-btn.active');
+                if (active) updateTabIndicator(active);
+            }, 120);
+        });
+        if (document.fonts && document.fonts.ready) {
+            document.fonts.ready.then(() => {
+                const active = document.querySelector('.tab-btn.active');
+                if (active) updateTabIndicator(active);
+            });
+        }
     </script>
 </body>
 </html>
