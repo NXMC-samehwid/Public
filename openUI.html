@@ -1976,6 +1976,8 @@
         // State Management
         let cloneData = [];
         let isWorking = false;
+        let currentActiveBranch = '';
+        let pollingTimer = null;
         let currentFilter = 'all';
         let currentTheme = 'nebula';
         let isBrowserPreview = (window.location.protocol === 'file:');
@@ -2160,7 +2162,20 @@
                 if (!res.ok) throw new Error('Daemon status unreachable');
                 const data = await res.json();
 
+                const wasWorking = isWorking;
+                const prevBranch = currentActiveBranch;
+                
                 updateUIState(data.working, data.progress, data.status, data.branch);
+                currentActiveBranch = data.branch || '';
+
+                // AUTO-REFRESH TRIGGER: When daemon finishes background task (switch, deploy, uninstall, clear)
+                // OR when the active branch transitions to a new branch
+                if ((wasWorking && !data.working) || (prevBranch && data.branch && prevBranch !== data.branch)) {
+                    await fetchClones();
+                    fetchBranches();
+                    showToast('Tác vụ hoàn tất! Đã tự động cập nhật danh sách slots.', 'success');
+                }
+
                 if (data.logs && Array.isArray(data.logs)) {
                     const c = document.getElementById('logsContainer');
                     c.innerHTML = data.logs.map(l => `<div class="log-entry"><span class="log-prefix">></span><span>${l}</span></div>`).join('');
@@ -2397,15 +2412,16 @@
             }
 
             try {
+                isWorking = true;
+                updateUIState(true, 5, `EXECUTING: ${type.toUpperCase()}`, currentActiveBranch || document.getElementById('statBranch').innerText);
+                scheduleNextPoll(); // Fast-poll immediately
+
                 const res = await fetch('/api/action', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ type: type, value: val })
                 });
                 if (!res.ok) throw new Error('API request failed');
-                
-                setTimeout(fetchClones, 800);
-                setTimeout(fetchStatus, 400);
             } catch(e) {
                 isBrowserPreview = true;
                 simulateAction(type, val);
@@ -2491,12 +2507,19 @@
                 if (active) updateTabIndicator(active);
             }, 80);
 
-            setInterval(() => {
-                if (!isBrowserPreview) {
-                    fetchStatus();
-                }
-            }, 3500);
+            scheduleNextPoll();
         });
+
+        function scheduleNextPoll() {
+            clearTimeout(pollingTimer);
+            const interval = isWorking ? 1000 : 3000;
+            pollingTimer = setTimeout(async () => {
+                if (!isBrowserPreview) {
+                    await fetchStatus();
+                }
+                scheduleNextPoll();
+            }, interval);
+        }
 
         // Recalibrate sliding pill indicator on resize or web fonts ready
         window.addEventListener('resize', () => {
